@@ -3,7 +3,6 @@ context("mlr_learners_multiout_featureless")
 test_that("autotest", {
   learner = lrn("multiout.featureless")
   expect_learner(learner)
-
   result = run_autotest(learner)
   expect_true(result, info = result$error)
 })

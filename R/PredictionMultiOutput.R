@@ -66,7 +66,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
 #' @export
 as.data.table.PredictionMultiOutput = function(x, ...) { #nolint
   cbind(
-    "row_ids" = x$row_ids,
+    "row_id" = x$row_ids,
     imap_dtc(x$predictions, function(x, n) {
       dt = as.data.table(x)[, row_id := NULL]
   }))

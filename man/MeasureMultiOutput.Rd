@@ -2,12 +2,12 @@
 % Please edit documentation in R/MeasureMultiOutput.R
 \name{MeasureMultiOutput}
 \alias{MeasureMultiOutput}
-\title{MultiOutputer Measure}
+\title{MultiOutput Measure}
 \description{
-This measure specializes \link[mlr3:Measure]{mlr3::Measure} for MultiOutputer analysis:
+This measure specializes \link[mlr3:Measure]{mlr3::Measure} for MultiOutput Task:
 \itemize{
-\item \code{task_type} is set to \code{"MultiOutput"}.
-\item Possible values for \code{predict_type} are \code{"partition"} and \code{"prob"}.
+\item \code{task_type} is set to \code{"multiout"}.
+\item Possible values for \code{predict_type} are all values from \code{mlr_reflections$learner_predict_types}.
 }
 
 Predefined measures can be found in the \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} \link[mlr3:mlr_measures]{mlr3::mlr_measures}.
