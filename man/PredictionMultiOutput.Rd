@@ -14,11 +14,14 @@ the predicted partition and MultiOutputer probability.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{predictions}}{(\code{integer()})\cr
-Access the stored partition.}
+\item{\code{predictions}}{(\code{list()})\cr
+Access the stored predictions.}
 
 \item{\code{missing}}{(\code{integer()})\cr
 Returns \code{row_ids} for which the predictions are missing or incomplete.}
+
+\item{\code{row_ids}}{(\code{integer()})\cr
+Access the stored row_ids.}
 }
 \if{html}{\out{</div>}}
 }
@@ -71,10 +74,19 @@ Row ids of the predicted observations, i.e. the row ids of the test set.}
 \if{html}{\out{<a id="method-print"></a>}}
 \if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
+Printer for the Prediction object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$print(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{(\code{any})\cr
+Not used.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

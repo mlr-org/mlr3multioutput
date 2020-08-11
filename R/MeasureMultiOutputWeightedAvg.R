@@ -1,7 +1,7 @@
-#' @title MultiOutput weighted Average Measure
+#' @title MultiOutput weighted average Measure
 #'
 #' @description
-#' Computes a weighted average over
+#' Computes a weighted average over measured scores for each target.
 #'
 #' * `task_type` is set to `"multiout"`.
 #' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
@@ -12,14 +12,18 @@
 #' @seealso
 #' Example measures:
 #' @export
-MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputInternal",
+MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
   inherit = MeasureMultiOutput,
   public = list(
-    measures = NULL,
-    weights = NULL,
-    initialize = function(name, measures, weights = NULL) {
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @template param_measure_multioutput_weightedavg
+    #'
+    #' @return A [`MeasureMultiOutput`]
+    initialize = function(name = "weightedavg", measures, weights = NULL) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
-      self$weights = assert_numeric(weights, len = length(measures), null.ok = TRUE)
+      self$weights = assert_numeric(weights, null.ok = TRUE)
       super$initialize(
         id = paste0("multiout.", name),
         range = c(0, Inf),
@@ -29,18 +33,24 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputInternal",
         properties = unlist(map(measures, "properties")),
         man = paste0("mlr3multioutput::mlr_measures_multiout.", name)
       )
-    }
+    },
+    #' @field measures (`list()`)\cr
+    #' Access the stored measures.
+    measures = NULL,
+    #' @field weights (`numeric()`)\cr
+    #' Access the stored weights.
+    weights = NULL
   ),
   private = list(
     .score = function(prediction, task, ...) {
       wnames = names(self$weights)
       if (all(wnames %in% mlr_reflections$task_types$type) || is.null(wnames)) {
-        weights = imap_dbl(prediction$predictions, function(x, nm) {
+        wts = imap_dbl(prediction$predictions, function(x, nm) {
           if (is.null(wnames)) 1      # No weights
           else self$weights[[x$task_type]] # weights by task_type
         })
       } else {
-        weights = self$weights
+        wts = self$weights
       }
 
       mnames = names(self$measures)
@@ -53,7 +63,7 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputInternal",
           x$score(self$measures[[x$task_type]])
         }
       })
-      weighted.mean(scores[names(weights)], weights)
+      weighted.mean(scores[names(wts)], wts)
     }
   )
 )

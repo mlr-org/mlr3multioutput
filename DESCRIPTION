@@ -39,7 +39,7 @@ Collate:
     'LearnerMultiOutput.R'
     'LearnerMultiOutputFeatureless.R'
     'MeasureMultiOutput.R'
-    'MeasureMultiOutputInternal.R'
+    'MeasureMultiOutputWeightedAvg.R'
     'PredictionMultiOutput.R'
     'TaskMultiOutput.R'
     'TaskMultiOutput_linnerud.R'

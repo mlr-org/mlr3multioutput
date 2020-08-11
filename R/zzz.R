@@ -44,6 +44,7 @@ register_mlr3 = function() {
   x$add("multiout.default",
     MeasureMultiOutputWeightedAvg$new("default", defs),
     name = paste0("multiobj", map_chr(defs, "id"), sep = "_"))
+  x$add("multiout.custom", MeasureMultiOutputWeightedAvg)
 }
 
 .onLoad = function(libname, pkgname) { # nolint

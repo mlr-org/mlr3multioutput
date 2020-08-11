@@ -32,6 +32,11 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
       self$task_type = "multiout"
       self$data$predictions = map(predictions, assert_prediction)
     },
+    #' @description
+    #' Printer for the Prediction object.
+    #'
+    #' @param ... (`any`)\cr
+    #'   Not used.
     print = function(...) {
       if (!nrow(self$predictions[[1]]$data$tab)) {
         catf("%s for 0 observations", format(self))
@@ -44,8 +49,8 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     }
   ),
   active = list(
-    #' @field predictions (`integer()`)\cr
-    #' Access the stored partition.
+    #' @field predictions (`list()`)\cr
+    #' Access the stored predictions.
     predictions = function() {
       self$data$predictions %??% rep(NA_real_, length(self$data$row_ids))
     },
@@ -55,6 +60,8 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     missing = function() {
       unique(unlist(map(self$predictions, "missing")))
     },
+    #' @field row_ids (`integer()`)\cr
+    #' Access the stored row_ids.
     row_ids = function(rhs) {
       if (!missing(rhs)) stopf("Field/Binding is read-only")
       self$data$predictions[[1]]$row_ids
