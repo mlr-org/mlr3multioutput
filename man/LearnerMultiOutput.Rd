@@ -53,7 +53,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{LearnerMultiOutput$new(
   id,
   param_set = ParamSet$new(),
-  predict_types = "response",
+  predict_types = character(),
   feature_types = character(),
   properties = character(),
   packages = character()

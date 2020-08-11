@@ -14,11 +14,8 @@ the predicted partition and MultiOutputer probability.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{partition}}{(\code{integer()})\cr
+\item{\code{predictions}}{(\code{integer()})\cr
 Access the stored partition.}
-
-\item{\code{prob}}{(\code{matrix()})\cr
-Access to the stored probabilities.}
 
 \item{\code{missing}}{(\code{integer()})\cr
 Returns \code{row_ids} for which the predictions are missing or incomplete.}
@@ -29,6 +26,7 @@ Returns \code{row_ids} for which the predictions are missing or incomplete.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{PredictionMultiOutput$new()}}
+\item \href{#method-print}{\code{PredictionMultiOutput$print()}}
 \item \href{#method-clone}{\code{PredictionMultiOutput$clone()}}
 }
 }
@@ -37,7 +35,6 @@ Returns \code{row_ids} for which the predictions are missing or incomplete.}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="format">}\href{../../mlr3/html/Prediction.html#method-format}{\code{mlr3::Prediction$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="help">}\href{../../mlr3/html/Prediction.html#method-help}{\code{mlr3::Prediction$help()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="print">}\href{../../mlr3/html/Prediction.html#method-print}{\code{mlr3::Prediction$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="score">}\href{../../mlr3/html/Prediction.html#method-score}{\code{mlr3::Prediction$score()}}\out{</span>}
 }
 \out{</details>}
@@ -51,8 +48,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(
   task = NULL,
   row_ids = task$row_ids,
-  partition = NULL,
-  prob = NULL
+  predictions = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -65,18 +61,20 @@ Task, used to extract defaults for \code{row_ids}.}
 \item{\code{row_ids}}{(\code{integer()})\cr
 Row ids of the predicted observations, i.e. the row ids of the test set.}
 
-\item{\code{partition}}{(\code{integer()})\cr
-Vector of MultiOutputer partitions.}
-
-\item{\code{prob}}{(\code{matrix()})\cr
-Numeric matrix of MultiOutput membership probabilities with one column for each MultiOutputer
-and one row for each observation.
-Columns must be named with MultiOutputer numbers, row names are automatically removed.
-If \code{prob} is provided, but \code{partition} is not, the MultiOutputer memberships are calculated from
-the probabilities using \code{\link[=max.col]{max.col()}} with \code{ties.method} set to \code{"first"}.}
+\item{\code{predictions}}{(\code{list()})\cr
+(Named) list of per-target predictions. Used to construct the \code{Prediction}-object.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$print(...)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -64,6 +64,10 @@ E.g., a \code{data.frame()} will be converted to a \link{DataBackendDataTable}.}
 
 \item{\code{target}}{(\code{character})\cr
 Name of the target columns.}
+
+\item{\code{task_types}}{\code{\link{character}}\cr
+Named character vector of per-target task-types.
+E.g. c(tgt1 = "regr", tgt2 = "classif")}
 }
 \if{html}{\out{</div>}}
 }

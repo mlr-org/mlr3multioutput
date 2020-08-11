@@ -18,27 +18,30 @@ register_mlr3 = function() {
     x$task_col_roles$multiout = x$task_col_roles$regr
     x$task_properties$multiout = x$task_properties$regr
     x$measure_properties$multiout = x$measure_properties$regr
-    x$learner_predict_types$multiout = unique(unname(unlist(mlr_reflections$learner_predict_types)))
+
+    # predict_types are predict_types of all other task types.
+    prd_types = do.call("c", unname(x$learner_predict_types))
+    x$learner_predict_types$multiout = prd_types[!duplicated(prd_types)]
+    x$learner_properties$multiout = unique(unlist(x$learner_properties))
     x$task_target_types = rowwise_table(
       ~type, ~task_type,
       "factor", "classif",
       "numeric", "regr",
       "integer", "regr",
       "ordered", "ordinal"
-     )
+    )
   }
 
 
   x = utils::getFromNamespace("mlr_tasks", ns = "mlr3")
   x$add("linnerud", load_task_linnerud)
 
-  # x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
-  # x$add("multiout.featureless", LearnerMultiOutputFeatureless)
+  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
+  x$add("multiout.featureless", LearnerMultiOutputFeatureless)
 
 
   # x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   # x$add("clust.db", MeasureClustInternal, name = "db")
-
 
 }
 
@@ -47,3 +50,4 @@ register_mlr3 = function() {
   backports::import(pkgname)
   register_mlr3()
 } # nocov end
+

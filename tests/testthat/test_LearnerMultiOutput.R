@@ -1,13 +1,12 @@
-context("LearnerClust")
+context("test_LearnerMultiOutput")
 
-test_that("predict on newdata works / clust", {
-  task = tsk("usarrests")$filter(1:40)
-  learner = lrn("clust.featureless")
-  learner$param_set$values = list(num.clusters = 1L)
+test_that("predict on newdata works / multiout", {
+  task = tsk("linnerud")$filter(1:10)
+  learner = lrn("multiout.featureless")
   expect_error(learner$predict(task), "trained")
   learner$train(task)
   expect_task(learner$state$train_task)
-  newdata = tsk("usarrests")$filter(41:50)$data()
+  newdata = tsk("linnerud")$filter(11:21)$data()
 
   # passing the task
   p = learner$predict_newdata(newdata = newdata, task = task)
@@ -23,9 +22,8 @@ test_that("predict on newdata works / clust", {
 })
 
 test_that("reset()", {
-  task = tsk("usarrests")
-  lrn = lrn("clust.featureless")
-  lrn$param_set$values = list(num.clusters = 2L)
+  task = tsk("linnerud")
+  lrn = lrn("multiout.featureless")
 
   lrn$train(task)
   expect_list(lrn$state, names = "unique")
@@ -34,9 +32,8 @@ test_that("reset()", {
 })
 
 test_that("empty predict set (#421)", {
-  task = tsk("usarrests")
-  learner = lrn("clust.featureless")
-  learner$param_set$values = list(num.clusters = 1L)
+  task = tsk("linnerud")
+  learner = lrn("multiout.featureless")
   resampling = rsmp("holdout", ratio = 1)
   hout = resampling$instantiate(task)
   model = learner$train(task, hout$train_set(1))

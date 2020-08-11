@@ -1,4 +1,4 @@
-context("TaskClust")
+context("TaskMultiOutput")
 
 test_that("Basic ops on linnerud task", {
   task = tsk("linnerud")
@@ -14,8 +14,8 @@ test_that("0 feature task", {
   expect_backend(b)
   expect_task(task)
   expect_data_table(task$data(), ncols = 2L)
-  # lrn = lrn("clust.featureless")
-  # lrn$param_set$values = list(num.clusters = 3L)
-  # p = lrn$train(task)$predict(task)
-  # expect_prediction(p)
+  l = lrn("multiout.featureless")
+  p = l$train(task)$predict(task)
+  expect_prediction(p)
 })
+

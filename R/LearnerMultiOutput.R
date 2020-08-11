@@ -30,7 +30,7 @@ LearnerMultiOutput = R6Class("LearnerMultiOutput",
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    initialize = function(id, param_set = ParamSet$new(), predict_types = "response",
+    initialize = function(id, param_set = ParamSet$new(), predict_types = character(),
       feature_types = character(), properties = character(),
       packages = character()) {
       super$initialize(

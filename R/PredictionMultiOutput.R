@@ -18,76 +18,45 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' @param row_ids (`integer()`)\cr
     #'   Row ids of the predicted observations, i.e. the row ids of the test set.
     #'
-    #' @param partition (`integer()`)\cr
-    #'   Vector of MultiOutputer partitions.
-    #'
-    #' @param prob (`matrix()`)\cr
-    #'   Numeric matrix of MultiOutput membership probabilities with one column for each MultiOutputer
-    #'   and one row for each observation.
-    #'   Columns must be named with MultiOutputer numbers, row names are automatically removed.
-    #'   If `prob` is provided, but `partition` is not, the MultiOutputer memberships are calculated from
-    #'   the probabilities using [max.col()] with `ties.method` set to `"first"`.
-    initialize = function(task = NULL, row_ids = task$row_ids, partition = NULL, prob = NULL) {
-
-      assert_row_ids(row_ids)
-      n = length(row_ids)
-
-      self$task_type = "MultiOutput"
-
-      if (!is.null(partition)) {
-        partition = assert_integer(partition, len = n, any.missing = FALSE)
+    #' @param predictions (`list()`)\cr
+    #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions = NULL) {
+      assert_true(all(names(predictions) == task$target_names))
+      if (length(row_ids) > 0L) {
+        assert_true(all.equal(
+          Reduce(function(x,y) if (identical(x,y)) x else FALSE,  map(predictions, "row_ids")),
+          assert_row_ids(row_ids)
+        ))
       }
-
-      if (!is.null(prob)) {
-        # need to check number of columns for matrix
-        assert_matrix(prob, nrows = n)
-        assert_numeric(prob, lower = 0, upper = 1)
-        if (!is.null(rownames(prob))) {
-          rownames(prob) = NULL
-        }
-
-        if (is.null(partition)) {
-          # calculate partition from prob
-          partition = max.col(prob, ties.method = "first")
-        }
+      self$task_type = "multiout"
+      self$data$predictions = map(predictions, assert_prediction)
+    },
+    print = function(...) {
+      if (!nrow(self$predictions[[1]]$data$tab)) {
+        catf("%s for 0 observations", format(self))
+      } else {
+        data = as.data.table(self)
+        catf("%s for %i observations", format(self), nrow(data))
+        catf("Targets: %s", paste(names(self$data$predictions), sep = ","))
+        print(data, nrows = 10L, topn = 3L, class = FALSE, row.names = FALSE, print.keys = FALSE)
       }
-
-      # Check returned predict types have correct names and add to data.table
-      self$predict_types = c("partition", "prob")[c(!is.null(partition), !is.null(prob))]
-      self$data$tab = data.table(
-        row_id = row_ids,
-        partition = partition
-      )
-      self$data$prob = prob
     }
   ),
   active = list(
-    #' @field partition (`integer()`)\cr
+    #' @field predictions (`integer()`)\cr
     #' Access the stored partition.
-    partition = function() {
-      self$data$tab$partition %??% rep(NA_real_, length(self$data$row_ids))
-    },
-
-    #' @field prob (`matrix()`)\cr
-    #' Access to the stored probabilities.
-    prob = function() {
-      self$data$prob
+    predictions = function() {
+      self$data$predictions %??% rep(NA_real_, length(self$data$row_ids))
     },
 
     #' @field missing (`integer()`)\cr
     #' Returns `row_ids` for which the predictions are missing or incomplete.
     missing = function() {
-      miss = logical(nrow(self$data$tab))
-
-      if ("partition" %in% self$predict_types) {
-        miss = miss | is.na(self$data$tab$partition)
-      }
-
-      if ("prob" %in% self$predict_types) {
-        miss = miss | apply(self$data$prob, 1L, anyMissing)
-      }
-
-      self$data$tab$row_id[miss]
+      unique(unlist(map(self$predictions, "missing")))
+    },
+    row_ids = function(rhs) {
+      if (!missing(rhs)) stopf("Field/Binding is read-only")
+      self$data$predictions[[1]]$row_ids
     }
   )
 )
@@ -95,14 +64,11 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
 
 #' @export
 as.data.table.PredictionMultiOutput = function(x, ...) { #nolint
-  tab = copy(x$data$tab)
-  if ("prob" %in% x$predict_types) {
-    prob = as.data.table(x$data$prob)
-    setnames(prob, names(prob), paste0("prob.", names(prob)))
-    tab = rcbind(tab, prob)
-  }
-
-  tab
+  cbind(
+    "row_ids" = x$row_ids,
+    imap_dtc(x$predictions, function(x, n) {
+      dt = as.data.table(x)[, row_id := NULL]
+  }))
 }
 
 #' @export

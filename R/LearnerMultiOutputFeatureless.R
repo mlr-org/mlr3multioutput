@@ -29,45 +29,21 @@ LearnerMultiOutputFeatureless = R6Class("LearnerMultiOutputFeatureless",
   ),
   private = list(
     .train = function(task) {
-      pv = self$param_set$get_values(tags = "train")
-      n = task$nrow
-      if (pv$num.MultiOutputers > n) {
-        stop("number of MultiOutputers must lie between 1 and nrow(data)",
-          call. = FALSE
-        )
-      } else if (pv$num.MultiOutputers == n) {
-        MultiOutput = seq_along(1:n)
-      } else {
-        times = c(
-          rep.int(n / pv$num.MultiOutputers, pv$num.MultiOutputers - 1),
-          n - (pv$num.MultiOutputers - 1) * floor(n / pv$num.MultiOutputers)
-        )
-
-        MultiOutput = rep.int(seq_along(1:pv$num.MultiOutputers),
-          times = times
-        )
-      }
-      set_class(
-        list(MultiOutput = MultiOutput, features = task$feature_names),
-        "MultiOutput.featureless_model"
-      )
+      # Fit a featureless learner for every target separately
+      # by converting to a base-task ("regr", "classif", ...).
+      mods = imap(task$task_types, function(type, tn) {
+        tn = convert_task(task$clone(), target = tn, new_type = type)
+        lrn(paste0(type, ".featureless"))$train(tn)
+      })
+      set_class(list(models = mods, features = task$feature_names), "multiout.featureless_model")
     },
     .predict = function(task) {
-      n = task$nrow
-      pv = self$param_set$get_values(tags = "train")
-      if (n <= pv$num.MultiOutputers) {
-        partition = seq_along(1:n)
-      } else {
-        times = c(
-          rep.int(n / pv$num.MultiOutputers, pv$num.MultiOutputers - 1),
-          n - (pv$num.MultiOutputers - 1) * floor(n / pv$num.MultiOutputers)
-        )
-
-        partition = rep.int(seq_along(1:pv$num.MultiOutputers),
-          times = times
-        )
-      }
-      PredictionMultiOutput$new(task = task, partition = partition)
+      # Predict per-target, aggregate into PredictionMultiOutput
+      prds = imap(task$task_types, function(type, tn) {
+        t = convert_task(task$clone(), target = tn, new_type = type)
+        self$state$model$models[[tn]]$predict(t)
+      })
+      PredictionMultiOutput$new(task, predictions = prds)
     }
   )
 )
