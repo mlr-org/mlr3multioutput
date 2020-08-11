@@ -28,6 +28,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
           assert_row_ids(row_ids)
         ))
       }
+      self$predict_types = unique(map_chr(predictions, "predict_types"))
       self$task_type = "multiout"
       self$data$predictions = map(predictions, assert_prediction)
     },

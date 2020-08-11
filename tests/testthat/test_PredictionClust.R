@@ -1,4 +1,4 @@
-context("PredictionClassif")
+context("PredictionMultioutput")
 
 test_that("Construction", {
   task = tsk("linnerud")

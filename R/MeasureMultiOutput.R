@@ -1,10 +1,10 @@
-#' @title MultiOutputer Measure
+#' @title MultiOutput Measure
 #'
 #' @description
-#' This measure specializes [mlr3::Measure] for MultiOutputer analysis:
+#' This measure specializes [mlr3::Measure] for MultiOutput Task:
 #'
-#' * `task_type` is set to `"MultiOutput"`.
-#' * Possible values for `predict_type` are `"partition"` and `"prob"`.
+#' * `task_type` is set to `"multiout"`.
+#' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
 #'
 #' Predefined measures can be found in the [mlr3misc::Dictionary] [mlr3::mlr_measures].
 #'
@@ -32,7 +32,7 @@ MeasureMultiOutput = R6Class("MeasureMultiOutput",
       predict_type = "response", task_properties = character(),
       packages = character(), man = NA_character_) {
       super$initialize(id,
-        task_type = "MultiOutput", range = range, minimize = minimize,
+        task_type = "multiout", range = range, minimize = minimize,
         aggregator = aggregator, properties = properties,
         predict_type = predict_type, task_properties = task_properties,
         packages = packages, man = man

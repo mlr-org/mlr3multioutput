@@ -6,7 +6,7 @@ test_that("Basic ops on linnerud task", {
   expect_identical(task$target_names, c("Pulls", "Squats", "Jumps"))
 })
 
-test_that("0 feature task", {
+test_that("Featureless task", {
   b = as_data_backend(data.table(ids = 1:30, "t" = rnorm(30)))
   task = TaskMultiOutput$new(id = "zero_feat_task", b, target = "t")
   expect_output(print(task))

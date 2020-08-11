@@ -18,6 +18,7 @@ register_mlr3 = function() {
     x$task_col_roles$multiout = x$task_col_roles$regr
     x$task_properties$multiout = x$task_properties$regr
     x$measure_properties$multiout = x$measure_properties$regr
+    x$default_measures$multiout = "multiout.default"
 
     # predict_types are predict_types of all other task types.
     prd_types = do.call("c", unname(x$learner_predict_types))
@@ -32,17 +33,17 @@ register_mlr3 = function() {
     )
   }
 
-
   x = utils::getFromNamespace("mlr_tasks", ns = "mlr3")
   x$add("linnerud", load_task_linnerud)
 
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
   x$add("multiout.featureless", LearnerMultiOutputFeatureless)
 
-
-  # x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
-  # x$add("clust.db", MeasureClustInternal, name = "db")
-
+  x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
+  defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multiout"))], msr)
+  x$add("multiout.default",
+    MeasureMultiOutputWeightedAvg$new("default", defs),
+    name = paste0("multiobj", map_chr(defs, "id"), sep = "_"))
 }
 
 .onLoad = function(libname, pkgname) { # nolint
