@@ -24,9 +24,12 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
     initialize = function(name = "weightedavg", measures, weights = NULL) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
       self$weights = assert_numeric(weights, null.ok = TRUE)
+      # FIXME:
+      # Currently all measures require same 'minimze', 'preditc_type' slot.
+      # mlr3 should perhaps allow opening up here.
       super$initialize(
         id = paste0("multiout.", name),
-        range = c(0, Inf),
+        range = private$.compute_range(),
         minimize = assert_flag(unique(map_lgl(measures, "minimize"))),
         predict_type = assert_string(unique(map_chr(measures, "predict_type"))),
         packages = assert_string(unique(map_chr(measures, "packages"))),
@@ -46,7 +49,7 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
       wnames = names(self$weights)
       if (all(wnames %in% mlr_reflections$task_types$type) || is.null(wnames)) {
         wts = imap_dbl(prediction$predictions, function(x, nm) {
-          if (is.null(wnames)) 1      # No weights
+          if (is.null(wnames)) 1           # No weights
           else self$weights[[x$task_type]] # weights by task_type
         })
       } else {
@@ -56,7 +59,7 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
       mnames = names(self$measures)
       scores = imap_dbl(prediction$predictions, function(x, nm) {
         if (nm %in% wnames) {
-          # Measures is list named with targets
+          # Measures is named with targets
           x$score(self$measures[[nm]])
         } else if (all(wnames %in% mlr_reflections$task_types$type)) {
           # Measures is named list with task_types
@@ -64,6 +67,18 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
         }
       })
       weighted.mean(scores[names(wts)], wts)
+    },
+    .compute_range = function() {
+      if (length(self$weights) == length(self$measures))
+        wts == self$weights
+      else (is.null(self$weights))
+        wts = rep(1, length(self$measures))
+
+      c(
+        min(map_dbl(self$measures, function(x) x$range[[1]]) * wts),
+        max(map_dbl(self$measures, function(x) x$range[[2]]) * wts)
+      )
+
     }
   )
 )

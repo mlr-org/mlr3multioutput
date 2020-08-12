@@ -13,8 +13,6 @@
 TaskMultiOutput = R6Class("TaskMultiOutput",
   inherit = TaskSupervised,
   public = list(
-    task_types = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #' @param target (`character`)\cr
@@ -25,7 +23,10 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     initialize = function(id, backend, target, task_types = NULL) {
       super$initialize(id = id, task_type = "multiout", backend = backend, target = target)
       self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
-    }
+    },
+    #' @field task_types (`character()`)\cr
+    #' See `initialize`.
+    task_types = NULL
   )
 )
 

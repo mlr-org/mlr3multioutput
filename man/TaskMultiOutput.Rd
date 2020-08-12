@@ -13,6 +13,14 @@ Predefined tasks are stored in the \link[mlr3misc:Dictionary]{dictionary} \link{
 \section{Super classes}{
 \code{\link[mlr3:Task]{mlr3::Task}} -> \code{\link[mlr3:TaskSupervised]{mlr3::TaskSupervised}} -> \code{TaskMultiOutput}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{task_types}}{(\code{character()})\cr
+See \code{initialize}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
