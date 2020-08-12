@@ -2,6 +2,7 @@
 #' @import mlr3misc
 #' @import paradox
 #' @import mlr3
+#' @import mlr3pipelines
 #' @import checkmate
 #' @importFrom R6 R6Class
 "_PACKAGE"

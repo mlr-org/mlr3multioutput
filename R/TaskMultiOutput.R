@@ -44,3 +44,16 @@ check_task_types = function(self, task_types) {
   assert_true(all(names(task_types) %in% self$target_names))
   return(task_types)
 }
+
+#' Convert to basic task_type
+#'
+#' Splits a [`TaskMultiOutput`] into several [`Task`]s of type "regr", "classif", ...
+#' according to "task$task_types".
+#' @param task [`TaskMultiOutput`]\cr
+#'   Multi-output task to split into tasks of type `task$task_types`.
+convert_to_basic_tasks = function(task) {
+  assert_task(task, "multiout")
+  tasks = imap(task$task_types, function(type, tn) {
+    tn = convert_task(task$clone(), target = tn, new_type = type)
+  })
+}

@@ -1,4 +1,5 @@
 library(mlr3)
+library(mlr3pipelines)
 library(mlr3multioutput)
 library(checkmate)
 library(testthat)

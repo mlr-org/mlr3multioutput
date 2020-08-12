@@ -31,9 +31,9 @@ LearnerMultiOutputFeatureless = R6Class("LearnerMultiOutputFeatureless",
     .train = function(task) {
       # Fit a featureless learner for every target separately
       # by converting to a base-task ("regr", "classif", ...).
+      tsks = convert_to_basic_tasks(task)
       mods = imap(task$task_types, function(type, tn) {
-        tn = convert_task(task$clone(), target = tn, new_type = type)
-        lrn(paste0(type, ".featureless"))$train(tn)
+        lrn(paste0(type, ".featureless"))$train(tsks[[tn]])
       })
       set_class(list(models = mods, features = task$feature_names), "multiout.featureless_model")
     },

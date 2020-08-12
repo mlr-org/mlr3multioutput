@@ -48,11 +48,7 @@ Access the stored row_ids.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(
-  task = NULL,
-  row_ids = task$row_ids,
-  predictions = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(task = NULL, row_ids = task$row_ids, predictions)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

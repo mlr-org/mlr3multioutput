@@ -20,8 +20,9 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #'
     #' @param predictions (`list()`)\cr
     #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
-    initialize = function(task = NULL, row_ids = task$row_ids, predictions = NULL) {
-      assert_true(all(names(predictions) == task$target_names))
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions) {
+      if (!is.null(task)) assert_true(all(names(predictions) == task$target_names))
+
       if (length(row_ids) > 0L) {
         assert_true(all.equal(
           Reduce(function(x,y) if (identical(x,y)) x else FALSE,  map(predictions, "row_ids")),
