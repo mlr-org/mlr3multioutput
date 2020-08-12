@@ -1,0 +1,87 @@
+---
+title: "Multi-Output Tasks with mlr3"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multi-Output Tasks with mlr3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mlr3)
+library(mlr3multioutput)
+```
+
+## Task
+
+```{r}
+t = tsk("linnerud")
+t
+```
+
+## Learner
+
+```{r}
+l = lrn("multiout.featureless")
+```
+
+## Train & Predict
+
+```{r}
+l$train(t)
+p = l$predict(t)
+p
+```
+
+## Score
+
+```{r}
+p$score()
+```
+
+## Measure
+
+Current limitations:
+- One predict_type: "response"
+- One `minimize`
+
+```{r}
+m1 = msr(
+  "multiout.custom",
+  measures = list("regr" = msr("regr.mse")),
+  weights =  c(Pulls = 1, Squats = 0.3, Jumps = 2)
+)
+m1
+```
+
+```{r}
+p$score(m1)
+```
+
+## with mlr3pipeliens
+
+- Not clear how to map `Learner` in `gunion` to target
+- Predictions currently loose info of which target they belong to.
+
+```{r}
+gr = po("splitmultiout") %>>%
+  po("multiplicityexply", outnum = 3) %>>%
+  gunion(list(
+    lrn("regr.rpart", id = "rp1"),
+    lrn("regr.rpart", id = "rp2"),
+    lrn("regr.rpart", id = "rp3")
+ )) %>>%
+ po("multiplicityimply", innum = 3) %>>%
+ po("multioutunite")
+gl = GraphLearner$new(gr)
+gl$train(t)
+prds = gl$predict(t)
+prds
+```

@@ -31,7 +31,9 @@ Suggests:
     mlr3keras,
     mlbench,
     plsdepot,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 Remotes:
     mlr-org/mlr3@task_converters
 Encoding: UTF-8
@@ -48,3 +50,4 @@ Collate:
     'TaskMultiOutput_linnerud.R'
     'task_converters.R'
     'zzz.R'
+VignetteBuilder: knitr
