@@ -27,8 +27,10 @@ Imports:
     paradox,
     R6
 Suggests:
-    plsdepot,
+    mlr3pipelines,
+    mlr3keras,
     mlbench,
+    plsdepot,
     testthat
 Remotes:
     mlr-org/mlr3@task_converters

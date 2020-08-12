@@ -15,7 +15,7 @@ register_mlr3 = function() {
       ~type, ~package, ~task, ~learner, ~prediction, ~measure,
       "multiout", "mlr3multiout", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
     )), "type")
-    x$task_col_roles$multiout = x$task_col_roles$regr
+    x$task_col_roles$multiout = c(unique(unlist(x$task_col_roles)), c("target_regr", "target_classif"))
     x$task_properties$multiout = x$task_properties$regr
     x$measure_properties$multiout = x$measure_properties$regr
     x$default_measures$multiout = "multiout.default"
@@ -38,6 +38,7 @@ register_mlr3 = function() {
 
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
   x$add("multiout.featureless", LearnerMultiOutputFeatureless)
+  # x$add("multiout.plsreg2", LearnerMultiOutputPLSReg2)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multiout"))], msr)
