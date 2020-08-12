@@ -19,6 +19,14 @@ library(mlr3)
 library(mlr3multioutput)
 ```
 
+# mlr3multioutput
+
+Storing and working with multi-output Tasks in `mlr3`.
+
+Multi-output Tasks are tasks with multiple targets of possibly different task_types that share the same features (and therefore observations).
+
+
+
 ## Task
 
 ```{r}
