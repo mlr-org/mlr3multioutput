@@ -8,7 +8,7 @@
 <!-- badges: end -->
 
 Storing and working with multi-output Tasks in `mlr3`.
-Multi-output Tasks are tasks with multiple targets of possibly different task_types that share the same features (and therefore observations).
+Multi-output Tasks are tasks with multiple targets of possibly different `task_types` that share the same features (and therefore observations).
 
 ## Installation
 
@@ -54,12 +54,16 @@ Several design decisions are not made yet, so input is highly appreciated.
 | Learner | Details | Reference |
 |---|---|---|
 | [multiout.featureless]()   | A featureless learner based on ("regr."|"classif").featureless | --  |
+| PipeOp |---|---|
+| [po("multioutsplit")]()   | Split up a MultiOutput Task in several classif or regr or ... tasks | --  |
+| [po("multioutunite")]()   | Unite classif or regr or ... predictions into a `PredictionMultiOutput`| --  |
+| [po("multilrn")]()        | Apply a list of per-task-type learners to a `TaskMultiOutput` | --  |
 
 
 ## Long-term Goals
-
 - Implement sub-class "Multilabel". This should cover almost all aspects of
   multi-label modelling.
+- Implement classifier and regressor chaining strategies via `mlr3pipelines`.
 
 ## Resources
 
