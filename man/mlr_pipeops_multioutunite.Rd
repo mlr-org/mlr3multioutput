@@ -63,6 +63,7 @@ Only methods inherited from \code{\link{PipeOpEnsemble}}/\code{\link{PipeOp}}.
 
 \seealso{
 Other PipeOps: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_splitmultiout}}
 
 Other Multiplicity PipeOps: 

@@ -155,3 +155,169 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 )
 
 mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
+
+#' @title PipeOpMultiLearner
+#'
+#' @usage NULL
+#' @name mlr_pipeops_multilrn
+#' @format [`R6Class`] object inheriting from [`PipeOp`].
+#'
+#' @description
+#' Wraps a `list` of [`mlr3::Learner`]s into a [`PipeOp`].
+#'
+#' Inherits the `$param_set`s (and therefore `$param_set$values`) from all [`Learner`][mlr3::Learner]s it is constructed from.
+#'
+#' @section Input and Output Channels:
+#' [`PipeOpMultiLearner`] has one input channel named `"input"`, taking a [`Task`][mlr3::Task] specific to the [`Learner`][mlr3::Learner]
+#' type given to `learner` during construction; both during training and prediction.
+#'
+#' [`PipeOpMultiLearner`] has one output channel named `"output"`, producing `NULL` during training and a [`Multiplicity`][mlr3pipelines::Multiplicity] of [`Predictions`][mlr3::Prediction]
+#' during prediction; this subclass is specific to the [`Learner`][mlr3::Learner] type given to `learner` during construction.
+#'
+#' The output during prediction is a [`Multiplicity`][mlr3pipelines::Multiplicity] of [`Predictions`][mlr3::Prediction] on the input data, produced by the [`Learners`][mlr3::Learner]
+#' trained on the training input data.
+#'
+#' @section State:
+#' The `$state` is set to the `$state` slot of the [`Learner`][mlr3::Learner] object. It is a named `list` with members:
+#' of states for each separate `Task` provided via the incoming `Multiplicity`.\
+#' Each element contains the following slots:
+#' * `model` :: `any`\cr
+#'   Model created by the [`Learner`][mlr3::Learner]'s `$.train()` function.
+#' * `train_log` :: [`data.table`] with columns `class` (`character`), `msg` (`character`)\cr
+#'   Errors logged during training.
+#' * `train_time` :: `numeric(1)`\cr
+#'   Training time, in seconds.
+#' * `predict_log` :: `NULL` | [`data.table`] with columns `class` (`character`), `msg` (`character`)\cr
+#'   Errors logged during prediction.
+#' * `predict_time` :: `NULL` | `numeric(1)`
+#'   Prediction time, in seconds.
+#'
+#' @section Parameters:
+#' The parameters are exactly the parameters of the [`Learners`][mlr3::Learner] wrapped by this object.
+#'
+#' @section Internals:
+#' The `$state` is currently not updated by prediction, so the `$state$predict_log` and `$state$predict_time` will always be `NULL`.
+#'
+#' @section Methods:
+#' Methods inherited from [`PipeOp`].
+#'
+#' @family PipeOps
+#' @family Meta PipeOps
+#' @export
+#' @examples
+#' library("mlr3")
+#' library("mlr3pipelines")
+#'
+#' task = tsk("linnerud")
+#' learners = list(
+#'   classif = lrn("classif.rpart", cp = 0.1),
+#'   regr = lrn("regr.rpart")
+#' )
+#' lrn_po = mlr_pipeops$get("multilearner", learners)
+#'
+#' # Train the graph
+#' gr = po("splitmultiout") %>>% lrn_po
+#' gr$train(task)
+#' gr$predict(task)
+PipeOpMultiLearner = R6Class("PipeOpMultiLearner", inherit = mlr3pipelines::PipeOp,
+  public = list(
+    #' Initialize a new R6 class.
+    #'
+    #' @param learners `list()`\cr
+    #'   List of [`Learner`][mlr3::Learner] | `character(1)`, either:
+    #'   * One learner for each `task_type`
+    #'   * One learner for each `target`, requires list to be named with the Task's `target_names`.
+    #' @param id `character(1)`\cr
+    #'   Identifier of the resulting  object, internally defaulting to the combined `ids` of the [`Learner`][mlr3::Learner] being wrapped.
+    #' @param param_vals named `list`\cr
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
+    initialize = function(learners, id = NULL, param_vals = list()) {
+      private$.learners = map(learners, as_learner, clone = TRUE)
+      id = id %??% paste0(map_chr(private$.learners, "id"), collapse = "_")
+      task_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$task
+      out_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$prediction
+      ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = i; x$param_set}))
+      super$initialize(id, param_vals = param_vals,
+        param_set = ps,
+        input = data.table(name = "input", train = "[Task]", predict = "[Task]"),
+        output = data.table(name = "output", train = "NULL", predict = "Prediction"),
+        tags = "learner"
+      )
+    }
+  ),
+  active = list(
+    #' @field id (`character(1)`)\cr
+    #' Access or set the `id`.
+    id = function(val) {
+      if (!missing(val)) {
+        private$.id = val
+        private$.param_set$set_id = val
+      }
+      private$.id
+    },
+    #' @field learners (`list()`)\cr
+    #' Access the stored learners.
+    learners = function(val) {
+      if (!missing(val)) {
+        if (!identical(val, private$.learners)) {
+          stop("$learner is read-only.")
+        }
+      }
+      private$.learners
+    },
+    #' @field learner_models (`list()`)\cr
+    #' Access the trained learners.
+    learner_models = function(val) {
+      if (!missing(val)) {
+        if (!identical(val, private$.learners)) {
+          stop("$learner_models is read-only.")
+        }
+      }
+      if (is.null(self$state) || is_noop(self$state)) {
+        private$.learners
+      } else {
+        multiplicity_recurse(self$state, clone_with_state, learner = private$.learners)
+      }
+    },
+    #' @field predict_types (`list()`)\cr
+    #' Access the predict_types.
+    predict_types = function(val) {
+      if (!missing(val)) {
+        assert_subset(val, names(mlr_reflections$learner_predict_types[[private$.learner$task_type]]))
+        private$.learner$predict_type = val
+      }
+      private$.learner$predict_type
+    }
+  ),
+  private = list(
+    .learners = NULL,
+
+    .train = function(inputs) {
+      on.exit(private$.reset_learner_states())
+      self$state = list()
+      map(unclass(inputs[[1]]), private$.train_per_task)
+      list(NULL)
+    },
+
+    .predict = function(inputs) {
+      on.exit(private$.reset_learner_states())
+      prds = map(unclass(inputs[[1]]), function(x) {
+        tn = x$target_names
+        private$.learners[[x$task_type]]$state = self$state[[tn]]
+        private$.learners[[x$task_type]]$predict(x)
+      })
+      list(PredictionMultiOutput$new(row_ids = prds[[1]]$row_ids, predictions = prds))
+    },
+
+    .train_per_task = function(task) {
+      self$state[[task$target_names]] = private$.learners[[task$task_type]]$clone()$train(task)$state
+    },
+    .reset_learner_states = function() {
+      map(private$.learners, function(x) x$state = NULL)
+      return(NULL)
+    }
+
+  )
+)
+
+mlr3pipelines::mlr_pipeops$add("multilrn", PipeOpMultiLearner)

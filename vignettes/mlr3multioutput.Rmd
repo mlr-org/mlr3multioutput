@@ -25,6 +25,9 @@ Storing and working with multi-output Tasks in `mlr3`.
 
 Multi-output Tasks are tasks with multiple targets of possibly different task_types that share the same features (and therefore observations).
 
+## Scope
+
+The packages scope is currently to ...
 
 
 ## Task
@@ -57,8 +60,8 @@ p$score()
 ## Measure
 
 Current limitations:
-- One predict_type: "response"
-- One `minimize`
+- One one predict_type: "response"
+- One of `minimize`, weights etc.
 
 ```{r}
 m1 = msr(
@@ -73,10 +76,68 @@ m1
 p$score(m1)
 ```
 
-## with mlr3pipeliens
+## with mlr3pipelines
 
-- Not clear how to map `Learner` in `gunion` to target
-- Predictions currently loose info of which target they belong to.
+- `po("splitmultiout")`: Splits a `TaskMultiOutput` into one `Task` for each target.
+
+```{r}
+po("splitmultiout")$train(t)
+```
+
+- `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultiOutput`.
+
+```{r}
+po("multioutunite") # See example below.
+```
+
+- `po("multilrn")`: Applies one or several `Learner`s for each Task in a `Multiplicity`.
+
+```{r}
+po("multilrn", lrns = list(lrn("regr.rpart"), lrn("classif.rpart")))
+```
+
+### Approach 1: Multiplicity (same learner for all targets)
+
+```{r}
+gr = po("splitmultiout") %>>%
+ lrn("regr.rpart") %>>%
+ po("multioutunite")
+gr = GraphLearner$new(gr)
+
+gr$train(t)
+gr$predict(t)
+```
+
+### Approach 2: Multiplicity (per-task-type)
+
+**API**:
+
+```{r}
+gr = po("splitmultiout") %>>%
+ po("multilrn", lrns = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
+
+gl = GraphLearner$new(gr)
+gl$train(t)
+prds = gl$predict(t)
+prds
+```
+
+Unclear:
+- What does the `ParamSet` look like? Just unite and prefix with id?
+
+### Approach 3: Multiplicity (per-target)
+
+Current problems:
+  - How to map learners to targets?
+  - Names are lost through  `multiplicitlyimply`
+
+**API**
+
+```{r}
+gr = ppl("pertargetlrn", list("target1" = lrn("regr.rpart"), "target2" = lrn("regr.rpart")))
+```
+
+**Internals**
 
 ```{r}
 gr = po("splitmultiout") %>>%
@@ -88,8 +149,63 @@ gr = po("splitmultiout") %>>%
  )) %>>%
  po("multiplicityimply", innum = 3) %>>%
  po("multioutunite")
+
 gl = GraphLearner$new(gr)
 gl$train(t)
 prds = gl$predict(t)
 prds
 ```
+
+## with mlr3keras
+
+**Not implemented**
+
+```{r}
+library(mlr3keras)
+lrn("multiout.kerasff")
+```
+
+
+## Example Pipeline
+
+```{r}
+library(mlr3)
+library(mlr3multioutput)
+library(mlr3pipelines)
+library(mlr3tuning)
+library(paradox)
+
+task = tsk("linnerud")
+
+gr = PipeOpSplitMultiout$new() %>>% lrn("regr.rpart") %>>% PipeOpPredictionMultiOutUnite$new()
+
+grl = GraphLearner$new(gr)
+
+ps = ParamSet$new(
+  list(
+    ParamInt$new("regr.rpart.minsplit", lower = 1, upper = 100),
+    ParamInt$new("regr.rpart.maxdepth", lower = 1, upper = 30)
+  )
+)
+
+cv3 = rsmp("cv", folds = 3)
+
+ms = MeasureMultiOutputWeightedAvg$new(measures = list(mse = msr("regr.mse")))
+
+auto = AutoTuner$new(
+  learner = grl,
+  resampling = cv3,
+  measure = ms,
+  search_space = ps,
+  terminator = trm("evals", n_evals = 20),
+  tuner = tnr("random_search")
+)
+
+auto$train(task)
+```
+
+
+## TODOS
+- Fix zzz.R, this seems sub-optimal, there should propably be unload and so on, look at other mlr3 packages.
+- Document current limitations in Measure, predict_type etc.
+- po("multilrn"): Tests and assert values are set correctly.

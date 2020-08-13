@@ -45,6 +45,7 @@ Collate:
     'MeasureMultiOutput.R'
     'MeasureMultiOutputWeightedAvg.R'
     'PipeOpSplitMultiout.R'
+    'PipelineMultiLearner.R'
     'PredictionMultiOutput.R'
     'TaskMultiOutput.R'
     'TaskMultiOutput_linnerud.R'

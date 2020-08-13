@@ -77,6 +77,7 @@ po$predict(list(task))
 }
 \seealso{
 Other PipeOps: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
 Other Multiplicity PipeOps: 
