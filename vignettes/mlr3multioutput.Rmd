@@ -30,6 +30,9 @@ Multi-output Tasks are tasks with multiple targets of possibly different task_ty
 The packages scope is currently to ...
 
 
+
+## General API
+
 ## Task
 
 ```{r}
@@ -37,10 +40,12 @@ t = tsk("linnerud")
 t
 ```
 
-## Learner
 
+## Learner
+git st
 ```{r}
 l = lrn("multiout.featureless")
+l
 ```
 
 ## Train & Predict
@@ -62,6 +67,7 @@ p$score()
 Current limitations:
 - One one predict_type: "response"
 - One of `minimize`, weights etc.
+- score() output has to be a scalar.
 
 ```{r}
 m1 = msr(
@@ -81,7 +87,7 @@ p$score(m1)
 - `po("splitmultiout")`: Splits a `TaskMultiOutput` into one `Task` for each target.
 
 ```{r}
-po("splitmultiout")$train(t)
+po("splitmultiout")$train(list(t))
 ```
 
 - `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultiOutput`.
@@ -131,12 +137,6 @@ Current problems:
   - How to map learners to targets?
   - Names are lost through  `multiplicitlyimply`
 
-**API**
-
-```{r}
-gr = ppl("pertargetlrn", list("target1" = lrn("regr.rpart"), "target2" = lrn("regr.rpart")))
-```
-
 **Internals**
 
 ```{r}
@@ -147,7 +147,7 @@ gr = po("splitmultiout") %>>%
     lrn("regr.rpart", id = "rp2"),
     lrn("regr.rpart", id = "rp3")
  )) %>>%
- po("multiplicityimply", innum = 3) %>>%
+ po("multiplicityimply", innum = t$target_names) %>>%
  po("multioutunite")
 
 gl = GraphLearner$new(gr)
@@ -216,3 +216,9 @@ auto$train(task)
 
 - Implement sub-class "Multilabel".
 
+- Paper zu Multioutput evaluation tutorial lesen
+- "score_multimeasure" function die list of  measures returned
+
+- Default multiout.custom to -1 for max measures
+
+- Splitmultiout should not be features during predict.
