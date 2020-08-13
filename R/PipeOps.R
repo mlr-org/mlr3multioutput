@@ -1,7 +1,7 @@
 #' @title PipeOpSplitMultiout
 #'
 #' @usage NULL
-#' @name mlr_pipeops_splitmultiout
+#' @name mlr_pipeops_multioutsplit
 #' @format [`R6Class`] inheriting from [`PipeOp`].
 #'
 #' @description
@@ -18,7 +18,7 @@
 #'
 #' @section Construction:
 #' ```
-#' PipeOpSplitMultiout$new(id = "splitmultiout", param_vals = list())
+#' PipeOpSplitMultiout$new(id = "multioutsplit", param_vals = list())
 #' ```
 #' * `id` :: `character(1)`\cr
 #'   Identifier of the resulting object, default `"ovrsplit"`.
@@ -58,7 +58,7 @@
 #' @examples
 #' library(mlr3)
 #' task = tsk("linnerud")
-#' po = po("splitmultiout")
+#' po = po("multioutsplit")
 #' po$train(list(task))
 #' po$predict(list(task))
 PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
@@ -90,7 +90,7 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
   )
 )
 
-mlr3pipelines::mlr_pipeops$add("splitmultiout", PipeOpSplitMultiout)
+mlr3pipelines::mlr_pipeops$add("multioutsplit", PipeOpSplitMultiout)
 
 
 #' @title PipeOpPredictionMultiOutUnite
@@ -221,7 +221,7 @@ mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 #' lrn_po = mlr_pipeops$get("multilrn", learners)
 #'
 #' # Train the graph
-#' gr = po("splitmultiout") %>>% lrn_po
+#' gr = po("multioutsplit") %>>% lrn_po
 #' gr$train(task)
 #' gr$predict(task)
 PipeOpMultiLearner = R6Class("PipeOpMultiLearner",

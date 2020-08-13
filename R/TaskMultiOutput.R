@@ -20,8 +20,8 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     #' @param task_types [`character`]\cr
     #'   Named character vector of per-target task-types.
     #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
-    initialize = function(id, backend, target, task_types = NULL) {
-      super$initialize(id = id, task_type = "multiout", backend = backend, target = target)
+    initialize = function(id, backend, target, task_types = NULL, task_type = "multiout") {
+      super$initialize(id = id, task_type = task_type, backend = backend, target = target)
       self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
     },
     #' @field task_types (`character()`)\cr
@@ -43,17 +43,4 @@ check_task_types = function(self, task_types) {
   assert_true(all(task_types %in% mlr_reflections$task_types$type))
   assert_true(all(names(task_types) %in% self$target_names))
   return(task_types)
-}
-
-#' Convert to basic task_type
-#'
-#' Splits a [`TaskMultiOutput`] into several [`Task`]s of type "regr", "classif", ...
-#' according to "task$task_types".
-#' @param task [`TaskMultiOutput`]\cr
-#'   Multi-output task to split into tasks of type `task$task_types`.
-convert_to_basic_tasks = function(task) {
-  assert_task(task, "multiout")
-  tasks = imap(task$task_types, function(type, tn) {
-    tn = convert_task(task$clone(), target = tn, new_type = type)
-  })
 }

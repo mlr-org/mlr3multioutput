@@ -55,6 +55,12 @@ Several design decisions are not made yet, so input is highly appreciated.
 |---|---|---|
 | [multiout.featureless]()   | A featureless learner based on ("regr."|"classif").featureless | --  |
 
+
+## Long-term Goals
+
+- Implement sub-class "Multilabel". This should cover almost all aspects of
+  multi-label modelling.
+
 ## Resources
 
 * There is a [book](https://mlr3book.mlr-org.com/) on `mlr3` and its ecosystem, but it is still unfinished.

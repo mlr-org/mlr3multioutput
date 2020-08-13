@@ -1,8 +1,8 @@
-context("mlr_pipeops_targetsplit")
+context("mlr_pipeops_multioutsplit")
 
-test_that("PipeOpTargetSplit for linnerud", {
+test_that("PipeOpSplitMultiout for linnerud", {
   task = tsk("linnerud")
-  p = PipeOpTargetSplit$new()
+  p = PipeOpSplitMultiout$new()
 
   ot = p$train(list(task))
   expect_list(ot, types = "Multiplicity")
@@ -14,13 +14,13 @@ test_that("PipeOpTargetSplit for linnerud", {
   map(op$output, expect_task)
   expect_true(all(names(op$output) == task$target_names))
 
-  gr = po("targetsplit") %>>% po("multiplicityexply", outnum = 3)
+  gr = po("multioutsplit") %>>% po("multiplicityexply", outnum = 3)
   map(gr$train(task), expect_task)
 })
 
 test_that("PipeOpTargetSplit for generated task", {
   task = generate_tasks(lrn("multiout.featureless"))[[1]]
-  p = PipeOpTargetSplit$new()
+  p = PipeOpSplitMultiout$new()
 
   ot = p$train(list(task))
   expect_list(ot, types = "Multiplicity")

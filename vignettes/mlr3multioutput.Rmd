@@ -44,7 +44,7 @@ t
 ## Learner
 git st
 ```{r}
-l = lrn("multiout.featureless")
+l = lrn("multiout.featurelessq()")
 l
 ```
 
@@ -214,11 +214,4 @@ auto$train(task)
 
 - po("multilrn"): Tests and assert values are set correctly.
 
-- Implement sub-class "Multilabel".
-
-- Paper zu Multioutput evaluation tutorial lesen
-- "score_multimeasure" function die list of  measures returned
-
-- Default multiout.custom to -1 for max measures
-
-- Splitmultiout should not be features during predict.
+- Read up paper on multioutput evaluation.

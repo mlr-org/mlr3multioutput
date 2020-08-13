@@ -47,6 +47,22 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
         catf("Targets: %s", paste(names(self$data$predictions), sep = ","))
         print(data, nrows = 10L, topn = 3L, class = FALSE, row.names = FALSE, print.keys = FALSE)
       }
+    },
+    #' @description
+    #' Returns scores for each measure separately.
+    #'
+    #' @param measures `list`\cr
+    #'   List of [`MeasureMultiOutput`] to score.
+    #' @param task [`TaskMultiOutput`]\cr
+    #'   Task to use for scoring
+    #'
+    #' @return A `numeric()` vector of scores.
+    score_separate = function(measures, task) {
+      map(measures, assert_measure)
+      if (!missing(task)) assert_task(task)
+      imap(measures, function(x) {
+        x$score_separate(self$predictions, task)
+      })
     }
   ),
   active = list(

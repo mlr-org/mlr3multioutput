@@ -3,8 +3,14 @@
 #' @description
 #' Computes a weighted average over measured scores for each target.
 #'
+#' * measures that should be maximized are automatically multiplied by '-1' internally during aggregation
+#'   and `minimize` is therefore set to `TRUE`
 #' * `task_type` is set to `"multiout"`.
 #' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
+#'   They are currently collected by accessing each [`Measure`]s "predict_type" slot.
+#'   Currently limited to only a single 'predict_type' across all measures.
+#' * `packages` are all packages required from the supplied measures.
+#' * The `range` is automatically computed based on the specified `weights`.
 #'
 #' Predefined measures can be found in the [mlr3misc::Dictionary] [mlr3::mlr_measures].
 #'
@@ -24,18 +30,39 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
     initialize = function(name = "weightedavg", measures, weights = NULL) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
       self$weights = assert_numeric(weights, null.ok = TRUE)
-      # FIXME:
-      # Currently all measures require same 'minimze', 'preditc_type' slot.
-      # mlr3 should perhaps allow opening up here.
       super$initialize(
         id = paste0("multiout.", name),
         range = private$.compute_range(),
-        minimize = assert_flag(unique(map_lgl(measures, "minimize"))),
+        minimize = TRUE,
         predict_type = assert_string(unique(map_chr(measures, "predict_type"))),
-        packages = assert_string(unique(map_chr(measures, "packages"))),
+        packages = assert_character(unique(map_chr(measures, "packages"))),
         properties = unlist(map(measures, "properties")),
         man = paste0("mlr3multioutput::mlr_measures_multiout.", name)
       )
+    },
+    #' @description
+    #' Returns scores for each measure in self$measures separately.
+    #'
+    #' @param prediction [`PredictionMultiOutput`]\cr
+    #'   Prediction to score.
+    #' @param task [`TaskMultiOutput`]\cr
+    #'   Task to score.
+    #' @param ... (`any`)\cr
+    #'   Currently not used.
+    #'
+    #' @return A `numeric()` vector of scores.
+    score_separate = function(prediction, task, ...) {
+      wnames = names(self$weights)
+      mnames = names(self$measures)
+      imap_dbl(prediction$predictions, function(x, nm) {
+        if (nm %in% wnames) {
+          # Measures is named with targets
+          x$score(self$measures[[nm]])
+        } else if (all(wnames %in% mlr_reflections$task_types$type)) {
+          # Measures is named list with task_types
+          x$score(self$measures[[x$task_type]])
+        }
+      })
     },
     #' @field measures (`list()`)\cr
     #' Access the stored measures.
@@ -60,12 +87,14 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
       scores = imap_dbl(prediction$predictions, function(x, nm) {
         if (nm %in% wnames) {
           # Measures is named with targets
-          x$score(self$measures[[nm]])
+          sc = x$score(self$measures[[nm]])
         } else if (all(wnames %in% mlr_reflections$task_types$type)) {
           # Measures is named list with task_types
-          x$score(self$measures[[x$task_type]])
+          sc = x$score(self$measures[[x$task_type]])
         }
+        if (self$measures[[x$task_type]]$minimize) sc else -sc
       })
+
       weighted.mean(scores[names(wts)], wts)
     },
     .compute_range = function() {
@@ -73,7 +102,6 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
         wts == self$weights
       else (is.null(self$weights))
         wts = rep(1, length(self$measures))
-
       c(
         min(map_dbl(self$measures, function(x) x$range[[1]]) * wts),
         max(map_dbl(self$measures, function(x) x$range[[2]]) * wts)
