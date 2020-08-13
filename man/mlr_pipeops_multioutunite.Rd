@@ -56,9 +56,11 @@ Other PipeOps:
 \code{\link{mlr_pipeops_splitmultiout}}
 
 Other Multiplicity PipeOps: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_splitmultiout}}
 
 Other Experimental Features: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_splitmultiout}}
 }
 \concept{Ensembles}
@@ -88,6 +90,7 @@ Other Experimental Features:
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize a new R6 class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PipeOpPredictionMultiOutUnite$new(id = "multioutunite", param_vals = list())}\if{html}{\out{</div>}}
 }

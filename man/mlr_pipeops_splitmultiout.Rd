@@ -71,11 +71,9 @@ Only methods inherited from \code{\link{PipeOp}}.
 \examples{
 library(mlr3)
 task = tsk("linnerud")
-po = po("spllitmultiout")
+po = po("splitmultiout")
 po$train(list(task))
 po$predict(list(task))
-Initialize a new R6 class.
-
 }
 \seealso{
 Other PipeOps: 
@@ -83,9 +81,11 @@ Other PipeOps:
 \code{\link{mlr_pipeops_multioutunite}}
 
 Other Multiplicity PipeOps: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
 Other Experimental Features: 
+\code{\link{mlr_pipeops_multilrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 }
 \concept{Experimental Features}
@@ -114,6 +114,7 @@ Other Experimental Features:
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize a new R6 class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PipeOpSplitMultiout$new(id = "targetsplit", param_vals = list())}\if{html}{\out{</div>}}
 }

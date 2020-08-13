@@ -67,21 +67,28 @@ learners = list(
   classif = lrn("classif.rpart", cp = 0.1),
   regr = lrn("regr.rpart")
 )
-lrn_po = mlr_pipeops$get("multilearner", learners)
+lrn_po = mlr_pipeops$get("multilrn", learners)
 
 # Train the graph
 gr = po("splitmultiout") \%>>\% lrn_po
 gr$train(task)
 gr$predict(task)
-Initialize a new R6 class.
-
 }
 \seealso{
 Other PipeOps: 
 \code{\link{mlr_pipeops_multioutunite}},
 \code{\link{mlr_pipeops_splitmultiout}}
+
+Other Multiplicity PipeOps: 
+\code{\link{mlr_pipeops_multioutunite}},
+\code{\link{mlr_pipeops_splitmultiout}}
+
+Other Experimental Features: 
+\code{\link{mlr_pipeops_multioutunite}},
+\code{\link{mlr_pipeops_splitmultiout}}
 }
-\concept{Meta PipeOps}
+\concept{Experimental Features}
+\concept{Multiplicity PipeOps}
 \concept{PipeOps}
 \section{Super class}{
 \code{\link[mlr3pipelines:PipeOp]{mlr3pipelines::PipeOp}} -> \code{PipeOpMultiLearner}
@@ -123,6 +130,7 @@ Access the predict_types.}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize a new R6 class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PipeOpMultiLearner$new(learners, id = NULL, param_vals = list())}\if{html}{\out{</div>}}
 }

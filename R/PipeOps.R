@@ -58,12 +58,13 @@
 #' @examples
 #' library(mlr3)
 #' task = tsk("linnerud")
-#' po = po("spllitmultiout")
+#' po = po("splitmultiout")
 #' po$train(list(task))
 #' po$predict(list(task))
 PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
   inherit = mlr3pipelines::PipeOp,
   public = list(
+    #' @description
     #' Initialize a new R6 class.
     #'
     #' @param id `character(1)`\cr
@@ -136,6 +137,7 @@ mlr3pipelines::mlr_pipeops$add("splitmultiout", PipeOpSplitMultiout)
 PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
   inherit = mlr3pipelines::PipeOpEnsemble,
   public = list(
+    #' @description
     #' Initialize a new R6 class.
     #'
     #' @param id `character(1)`\cr
@@ -204,7 +206,8 @@ mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 #' Methods inherited from [`PipeOp`].
 #'
 #' @family PipeOps
-#' @family Meta PipeOps
+#' @family Multiplicity PipeOps
+#' @family Experimental Features
 #' @export
 #' @examples
 #' library("mlr3")
@@ -215,7 +218,7 @@ mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 #'   classif = lrn("classif.rpart", cp = 0.1),
 #'   regr = lrn("regr.rpart")
 #' )
-#' lrn_po = mlr_pipeops$get("multilearner", learners)
+#' lrn_po = mlr_pipeops$get("multilrn", learners)
 #'
 #' # Train the graph
 #' gr = po("splitmultiout") %>>% lrn_po
@@ -224,6 +227,7 @@ mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
   inherit = mlr3pipelines::PipeOp,
   public = list(
+    #' @description
     #' Initialize a new R6 class.
     #'
     #' @param learners `list()`\cr
