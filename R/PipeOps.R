@@ -64,6 +64,12 @@
 PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
   inherit = mlr3pipelines::PipeOp,
   public = list(
+    #' Initialize a new R6 class.
+    #'
+    #' @param id `character(1)`\cr
+    #'   Identifier of the resulting  object, internally defaulting "targetsplit".
+    #' @param param_vals named `list`\cr
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
     initialize = function(id = "targetsplit", param_vals = list()) {
       super$initialize(id, param_vals = param_vals,
         input = data.table(name = "input", train = "TaskMultiOutput", predict = "TaskMultiOutput"),
@@ -101,16 +107,6 @@ mlr3pipelines::mlr_pipeops$add("splitmultiout", PipeOpSplitMultiout)
 #' Note that [`Multiplicity`] is currently an experimental feature and the implementation or UI
 #' may change.
 #'
-#' @section Construction:
-#' ```
-#' PipeOpPredictionMultiOutUnite$new(id = "multioutunite", param_vals = list())
-#' ```
-#'
-#' * `id` :: `character(1)`\cr
-#'   Identifier of the resulting object, default `"multioutunite"`.
-#' * `param_vals` :: named `list`\cr
-#'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
-#'
 #' @section Input and Output Channels:
 #' Input and output channels are inherited from [`PipeOpEnsemble`]. Instead of a
 #' [`PipeOpEnsemble`]'s `collect` parameter is initialized
@@ -140,6 +136,12 @@ mlr3pipelines::mlr_pipeops$add("splitmultiout", PipeOpSplitMultiout)
 PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
   inherit = mlr3pipelines::PipeOpEnsemble,
   public = list(
+    #' Initialize a new R6 class.
+    #'
+    #' @param id `character(1)`\cr
+    #'   Identifier of the resulting  object, defaults to "multioutunite".
+    #' @param param_vals named `list`\cr
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
     initialize = function(id = "multioutunite", param_vals = list()) {
       super$initialize(0, TRUE, id, param_vals = param_vals, prediction_type = "Prediction", tags = "multiplicity")
     }
@@ -219,7 +221,8 @@ mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 #' gr = po("splitmultiout") %>>% lrn_po
 #' gr$train(task)
 #' gr$predict(task)
-PipeOpMultiLearner = R6Class("PipeOpMultiLearner", inherit = mlr3pipelines::PipeOp,
+PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
+  inherit = mlr3pipelines::PipeOp,
   public = list(
     #' Initialize a new R6 class.
     #'
@@ -312,6 +315,7 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner", inherit = mlr3pipelines::Pipe
     .train_per_task = function(task) {
       self$state[[task$target_names]] = private$.learners[[task$task_type]]$clone()$train(task)$state
     },
+
     .reset_learner_states = function() {
       map(private$.learners, function(x) x$state = NULL)
       return(NULL)
