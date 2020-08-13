@@ -207,9 +207,12 @@ auto$train(task)
 
 ## TODOS
 
-- Fix zzz.R, this seems sub-optimal, there should propably be unload and so on, look at other mlr3 packages.
+- Fix zzz.R, this seems sub-optimal, there should propably be unload and so on,
+  look at other mlr3 packages.
 
 - Document current limitations in Measure, predict_type etc.
 
 - po("multilrn"): Tests and assert values are set correctly.
+
+- Implement sub-class "Multilabel".
 
