@@ -30,6 +30,7 @@ Access the stored row_ids.}
 \itemize{
 \item \href{#method-new}{\code{PredictionMultiOutput$new()}}
 \item \href{#method-print}{\code{PredictionMultiOutput$print()}}
+\item \href{#method-score_separate}{\code{PredictionMultiOutput$score_separate()}}
 \item \href{#method-clone}{\code{PredictionMultiOutput$clone()}}
 }
 }
@@ -82,6 +83,30 @@ Printer for the Prediction object.
 Not used.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-score_separate"></a>}}
+\if{latex}{\out{\hypertarget{method-score_separate}{}}}
+\subsection{Method \code{score_separate()}}{
+Returns scores for each measure separately.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$score_separate(measures, task)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{measures}}{\code{list}\cr
+List of \code{\link{MeasureMultiOutput}} to score.}
+
+\item{\code{task}}{\code{\link{TaskMultiOutput}}\cr
+Task to use for scoring}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{numeric()} vector of scores.
 }
 }
 \if{html}{\out{<hr>}}

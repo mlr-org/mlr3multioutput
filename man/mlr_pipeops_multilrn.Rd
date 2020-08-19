@@ -70,22 +70,22 @@ learners = list(
 lrn_po = mlr_pipeops$get("multilrn", learners)
 
 # Train the graph
-gr = po("splitmultiout") \%>>\% lrn_po
+gr = po("multioutsplit") \%>>\% lrn_po
 gr$train(task)
 gr$predict(task)
 }
 \seealso{
 Other PipeOps: 
-\code{\link{mlr_pipeops_multioutunite}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}},
+\code{\link{mlr_pipeops_multioutunite}}
 
 Other Multiplicity PipeOps: 
-\code{\link{mlr_pipeops_multioutunite}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}},
+\code{\link{mlr_pipeops_multioutunite}}
 
 Other Experimental Features: 
-\code{\link{mlr_pipeops_multioutunite}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}},
+\code{\link{mlr_pipeops_multioutunite}}
 }
 \concept{Experimental Features}
 \concept{Multiplicity PipeOps}

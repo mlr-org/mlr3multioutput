@@ -53,15 +53,15 @@ Only methods inherited from \code{\link{PipeOpEnsemble}}/\code{\link{PipeOp}}.
 \seealso{
 Other PipeOps: 
 \code{\link{mlr_pipeops_multilrn}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}}
 
 Other Multiplicity PipeOps: 
 \code{\link{mlr_pipeops_multilrn}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}}
 
 Other Experimental Features: 
 \code{\link{mlr_pipeops_multilrn}},
-\code{\link{mlr_pipeops_splitmultiout}}
+\code{\link{mlr_pipeops_multioutsplit}}
 }
 \concept{Ensembles}
 \concept{Experimental Features}

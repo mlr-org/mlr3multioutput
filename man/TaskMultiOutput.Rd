@@ -57,7 +57,13 @@ See \code{initialize}.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TaskMultiOutput$new(id, backend, target, task_types = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TaskMultiOutput$new(
+  id,
+  backend,
+  target,
+  task_types = NULL,
+  task_type = "multiout"
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

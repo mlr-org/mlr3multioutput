@@ -6,8 +6,14 @@
 \description{
 Computes a weighted average over measured scores for each target.
 \itemize{
+\item measures that should be maximized are automatically multiplied by '-1' internally during aggregation
+and \code{minimize} is therefore set to \code{TRUE}
 \item \code{task_type} is set to \code{"multiout"}.
 \item Possible values for \code{predict_type} are all values from \code{mlr_reflections$learner_predict_types}.
+They are currently collected by accessing each \code{\link{Measure}}s "predict_type" slot.
+Currently limited to only a single 'predict_type' across all measures.
+\item \code{packages} are all packages required from the supplied measures.
+\item The \code{range} is automatically computed based on the specified \code{weights}.
 }
 
 Predefined measures can be found in the \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} \link[mlr3:mlr_measures]{mlr3::mlr_measures}.
@@ -33,6 +39,7 @@ Access the stored weights.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MeasureMultiOutputWeightedAvg$new()}}
+\item \href{#method-score_separate}{\code{MeasureMultiOutputWeightedAvg$score_separate()}}
 \item \href{#method-clone}{\code{MeasureMultiOutputWeightedAvg$clone()}}
 }
 }
@@ -82,6 +89,33 @@ Defaults to \code{1} for each measure.}
 }
 \subsection{Returns}{
 A \code{\link{MeasureMultiOutput}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-score_separate"></a>}}
+\if{latex}{\out{\hypertarget{method-score_separate}{}}}
+\subsection{Method \code{score_separate()}}{
+Returns scores for each measure in self$measures separately.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MeasureMultiOutputWeightedAvg$score_separate(prediction, task, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{prediction}}{\code{\link{PredictionMultiOutput}}\cr
+Prediction to score.}
+
+\item{\code{task}}{\code{\link{TaskMultiOutput}}\cr
+Task to score.}
+
+\item{\code{...}}{(\code{any})\cr
+Currently not used.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{numeric()} vector of scores.
 }
 }
 \if{html}{\out{<hr>}}
