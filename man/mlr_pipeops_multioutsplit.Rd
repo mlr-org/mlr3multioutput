@@ -26,7 +26,8 @@ may change.
 \item \code{id} :: \code{character(1)}\cr
 Identifier of the resulting object, default \code{"ovrsplit"}.
 \item \code{param_vals} :: named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default \code{list()}.
+List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise
+be set during construction. Default \code{list()}.
 }
 }
 
@@ -126,7 +127,8 @@ Initialize a new R6 class.
 Identifier of the resulting  object, internally defaulting "targetsplit".}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set
+during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }

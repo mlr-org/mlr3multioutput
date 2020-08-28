@@ -8,7 +8,6 @@
 "_PACKAGE"
 
 register_mlr3 = function() {
-
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
 
   if (length(x$task_types[list("multiout"), on = "type", which = TRUE, nomatch = NULL]) == 0L) {
@@ -39,19 +38,28 @@ register_mlr3 = function() {
 
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
   x$add("multiout.featureless", LearnerMultiOutputFeatureless)
-  # x$add("multiout.plsreg2", LearnerMultiOutputPLSReg2)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multiout"))], msr)
   x$add("multiout.default",
     MeasureMultiOutputWeightedAvg$new("default", defs),
-    name = paste0("multiobj", map_chr(defs, "id"), sep = "_"))
-  x$add("multiout.custom", MeasureMultiOutputWeightedAvg)
+    name = paste0("multiobj", map_chr(defs, "id"), sep = "_")
+  )
+  x$add("multiout.custom", MeasureMultiOutputWeightedAvg, measures = defs)
 }
 
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
-  backports::import(pkgname)
   register_mlr3()
+  setHook(packageEvent("mlr3", "onLoad"), function(...) register_mlr3(), action = "append")
+  backports::import(pkgname)
 } # nocov end
 
+
+.onUnload = function(libpath) { # nolint
+  # nocov start
+  event = packageEvent("mlr3", "onLoad")
+  hooks = getHook(event)
+  pkgname = vapply(hooks[-1], function(x) environment(x)$pkgname, NA_character_)
+  setHook(event, hooks[pkgname != "mlr3multioutput"], action = "replace")
+} # nocov end

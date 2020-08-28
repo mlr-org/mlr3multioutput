@@ -146,10 +146,12 @@ List of \code{\link[mlr3:Learner]{Learner}} | \code{character(1)}, either:
 }}
 
 \item{\code{id}}{\code{character(1)}\cr
-Identifier of the resulting  object, internally defaulting to the combined \code{ids} of the \code{\link[mlr3:Learner]{Learner}} being wrapped.}
+Identifier of the resulting  object, internally defaulting to the combined \code{ids} of the
+\code{\link[mlr3:Learner]{Learner}} being wrapped.}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would
+otherwise be set during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }

@@ -82,31 +82,38 @@ MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
       } else {
         wts = self$weights
       }
-
-      mnames = names(self$measures)
       scores = imap_dbl(prediction$predictions, function(x, nm) {
-        if (nm %in% wnames) {
-          # Measures is named with targets
+        if (nm %in% names(self$measures)) {
+          # Measures are named with targets
           sc = x$score(self$measures[[nm]])
-        } else if (all(wnames %in% mlr_reflections$task_types$type)) {
+          if (self$measures[[nm]]$minimize) sc else -sc
+        } else {
           # Measures is named list with task_types
-          sc = x$score(self$measures[[x$task_type]])
+          m = self$measures[[x$task_type]]
+          if (is.null(m)) {
+            warning(paste0("No measure for task_type ", x$task_type, " specified. Returning 0."))
+            return(0.)
+          }
+          sc = x$score(m)
+          if (m$minimize) sc else -sc
         }
-        if (self$measures[[x$task_type]]$minimize) sc else -sc
       })
-
       weighted.mean(scores[names(wts)], wts)
     },
     .compute_range = function() {
       if (length(self$weights) == length(self$measures))
-        wts == self$weights
-      else (is.null(self$weights))
+        wts = self$weights
+      else if (is.null(self$weights))
         wts = rep(1, length(self$measures))
-      c(
-        min(map_dbl(self$measures, function(x) x$range[[1]]) * wts),
-        max(map_dbl(self$measures, function(x) x$range[[2]]) * wts)
-      )
+      else if (all(names(self$weights) %in% mlr_reflections$task_types$type))
+        wts = self$weights[map_chr(self$measures, "task_type")]
+      else
+        return(c(-Inf, Inf)) # Weights are named by target, measures have types
 
+      # Compute min and max, replace with -Inf and Inf if unknown
+      mn = min(map_dbl(self$measures, function(x) x$range[[1]]) * wts)
+      mx = max(map_dbl(self$measures, function(x) x$range[[2]]) * wts)
+      c(ifelse(is.nan(mn), -Inf, mn), ifelse(is.nan(mx), Inf, mx))
     }
   )
 )

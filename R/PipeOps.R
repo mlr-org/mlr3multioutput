@@ -23,7 +23,8 @@
 #' * `id` :: `character(1)`\cr
 #'   Identifier of the resulting object, default `"ovrsplit"`.
 #' * `param_vals` :: named `list`\cr
-#'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
+#'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise
+#'   be set during construction. Default `list()`.
 #'
 #' @section Input and Output Channels:
 #' [`PipeOpSplitMultiout`] has one input channel named `"input"` taking a [`TaskMultiOutput`][TaskMultiOutput]
@@ -70,7 +71,8 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
     #' @param id `character(1)`\cr
     #'   Identifier of the resulting  object, internally defaulting "targetsplit".
     #' @param param_vals named `list`\cr
-    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set
+    #' during construction. Default `list()`.
     initialize = function(id = "targetsplit", param_vals = list()) {
       super$initialize(id, param_vals = param_vals,
         input = data.table(name = "input", train = "TaskMultiOutput", predict = "TaskMultiOutput"),
@@ -235,14 +237,16 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
     #'   * One learner for each `task_type`
     #'   * One learner for each `target`, requires list to be named with the Task's `target_names`.
     #' @param id `character(1)`\cr
-    #'   Identifier of the resulting  object, internally defaulting to the combined `ids` of the [`Learner`][mlr3::Learner] being wrapped.
+    #'   Identifier of the resulting  object, internally defaulting to the combined `ids` of the
+    #'   [`Learner`][mlr3::Learner] being wrapped.
     #' @param param_vals named `list`\cr
-    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would
+    #'   otherwise be set during construction. Default `list()`.
     initialize = function(learners, id = NULL, param_vals = list()) {
       private$.learners = map(learners, as_learner, clone = TRUE)
       id = id %??% paste0(map_chr(private$.learners, "id"), collapse = "_")
-      task_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$task
-      out_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$prediction
+      task_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$task      # nolint
+      out_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$prediction # nolint
       ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = i; x$param_set}))
       super$initialize(id, param_vals = param_vals,
         param_set = ps,

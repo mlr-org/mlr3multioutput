@@ -8,6 +8,11 @@
 #'
 #' @template param_id
 #' @template param_backend
+#' @param task_types (`character()`)\cr
+#'   Vector named with target names specifying the task_type for each respective target.
+#'   Will be inferred if not provided.
+#' @param task_type (`character(1)`)\cr
+#'   Task type of the constructed task. Defautls to `"multiout"`.
 #' @family Task
 #' @export
 TaskMultiOutput = R6Class("TaskMultiOutput",
@@ -17,27 +22,27 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #' @param target (`character`)\cr
     #'   Name of the target columns.
-    #' @param task_type [`character`]\cr
+    #' @param task_types [`character`]\cr
     #'   Named character vector of per-target task-types.
     #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
-    initialize = function(id, backend, target, task_type = "multiout") {
+    initialize = function(id, backend, target, task_types = NULL, task_type = "multiout") {
       super$initialize(id = id, task_type = task_type, backend = backend, target = target)
-      self$task_type = check_task_type(self, task_type) %??% infer_task_type(self)
+      self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
     },
-    #' @field task_type (`character()`)\cr
+    #' @field task_types (`character()`)\cr
     #' See `initialize`.
-    task_type = NULL
+    task_types = NULL
   )
 )
 
 # infers task types from targets via 'mlr_reflections$task_target_types' lookup
-infer_task_type = function(self) {
+infer_task_types = function(self) {
   dt = merge(self$col_info[id %in% self$target_names], mlr_reflections$task_target_types, by = "type")
   tt = setNames(dt$task_type, dt$id)
   tt[self$target_names]
 }
 
-check_task_type = function(self, task_type) {
+check_task_types = function(self, task_type) {
   if (is.null(task_type)) return(task_type)
   assert_named(task_type, type = "unique")
   assert_true(all(task_type %in% mlr_reflections$task_type$type))

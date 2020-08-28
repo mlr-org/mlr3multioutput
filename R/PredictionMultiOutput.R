@@ -21,17 +21,20 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' @param predictions (`list()`)\cr
     #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
     initialize = function(task = NULL, row_ids = task$row_ids, predictions) {
-      if (!is.null(task)) assert_true(all(names(predictions) == task$target_names))
 
+      if (!is.null(task) && !missing(predictions))
+        assert_true(all(names(predictions) == task$target_names))
       if (length(row_ids) > 0L) {
         assert_true(all.equal(
-          Reduce(function(x,y) if (identical(x,y)) x else FALSE,  map(predictions, "row_ids")),
+          Reduce(function(x, y) if (identical(x,y)) x else FALSE,  map(predictions, "row_ids")),
           assert_row_ids(row_ids)
         ))
       }
-      self$predict_types = unique(map_chr(predictions, "predict_types"))
       self$task_type = "multiout"
-      self$data$predictions = map(predictions, assert_prediction)
+      if (!missing(predictions)) {
+        self$predict_types = unique(map_chr(predictions, "predict_types"))
+        self$data$predictions = map(predictions, assert_prediction)
+      }
     },
     #' @description
     #' Printer for the Prediction object.
@@ -39,7 +42,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' @param ... (`any`)\cr
     #'   Not used.
     print = function(...) {
-      if (!nrow(self$predictions[[1]]$data$tab)) {
+      if (length(self$predictions) == 0L) {
         catf("%s for 0 observations", format(self))
       } else {
         data = as.data.table(self)

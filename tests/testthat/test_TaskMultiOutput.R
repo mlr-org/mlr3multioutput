@@ -18,4 +18,3 @@ test_that("Featureless task", {
   p = l$train(task)$predict(task)
   expect_prediction(p)
 })
-

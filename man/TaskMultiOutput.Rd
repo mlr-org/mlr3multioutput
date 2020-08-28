@@ -16,7 +16,7 @@ Predefined tasks are stored in the \link[mlr3misc:Dictionary]{dictionary} \link{
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{task_type}}{(\code{character()})\cr
+\item{\code{task_types}}{(\code{character()})\cr
 See \code{initialize}.}
 }
 \if{html}{\out{</div>}}
@@ -57,7 +57,13 @@ See \code{initialize}.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TaskMultiOutput$new(id, backend, target, task_type = "multiout")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TaskMultiOutput$new(
+  id,
+  backend,
+  target,
+  task_types = NULL,
+  task_type = "multiout"
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -73,9 +79,12 @@ E.g., a \code{data.frame()} will be converted to a \link{DataBackendDataTable}.}
 \item{\code{target}}{(\code{character})\cr
 Name of the target columns.}
 
-\item{\code{task_type}}{\code{\link{character}}\cr
+\item{\code{task_types}}{\code{\link{character}}\cr
 Named character vector of per-target task-types.
 E.g. c(tgt1 = "regr", tgt2 = "classif")}
+
+\item{\code{task_type}}{(\code{character(1)})\cr
+Task type of the constructed task. Defautls to \code{"multiout"}.}
 }
 \if{html}{\out{</div>}}
 }

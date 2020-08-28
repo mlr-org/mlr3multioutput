@@ -14,7 +14,7 @@ Multi-output Tasks are tasks with multiple targets of possibly different `task_t
 
 Install the development version from GitHub:
 
-``` r
+```r
 remotes::install_github("mlr-org/mlr3multioutput")
 ```
 
@@ -22,7 +22,7 @@ remotes::install_github("mlr-org/mlr3multioutput")
 
 Instantiate an example `Task` "linnerud", which has 3 regression targets.
 
-``` r
+```r
 library(mlr3)
 library(mlr3multioutput)
 t = tsk("linnerud")
@@ -37,7 +37,7 @@ t
 
 And afterwards we can **train** and **predict**:
 
-``` r
+```r
 learner <- lrn("multiout.featureless")
 learner$train(t)
 learner$predict(t)
@@ -49,20 +49,25 @@ The current goal of the package is to implement multi-output Tasks for
 `mlr`. Such Tasks can be either modeled using a separate learner for each class (via `mlr3pipelines`), using `Classification` and `Regression` chains (again, via ` mlr3pipelines`) or alternatively using `Learners` that can directly handle and work with multiple outputs.
 Several design decisions are not made yet, so input is highly appreciated.
 
-### Currently implemented Learners
+### Currently implemented Learners and Strategies
+
+`mlr3multioutput` implements Learners as well as reduction strategies for multioutput Tasks.
 
 | Learner | Details | Reference |
 |---|---|---|
-| [multiout.featureless]()   | A featureless learner based on ("regr."|"classif").featureless | --  |
-| PipeOp |---|---|
-| [po("multioutsplit")]()   | Split up a MultiOutput Task in several classif or regr or ... tasks | --  |
-| [po("multioutunite")]()   | Unite classif or regr or ... predictions into a `PredictionMultiOutput`| --  |
+| [multiout.featureless]()   | A featureless learner based on ("regr." or "classif").featureless | --  |
+
+
+| PipeOp |Details | Reference |
+|---|---|---|
+| [po("multioutsplit")]()   | Split up a MultiOutput Task in several `classif`, `regr` or `...` tasks | --  |
+| [po("multioutunite")]()   | Unite `classif`, `regr` or `...` predictions into a `PredictionMultiOutput` | --  |
 | [po("multilrn")]()        | Apply a list of per-task-type learners to a `TaskMultiOutput` | --  |
 
 
 ## Long-term Goals
-- Implement sub-class "Multilabel". This should cover almost all aspects of
-  multi-label modelling.
+
+- Implement sub-class "Multilabel". This should cover almost all aspects of multi-label modelling.
 - Implement classifier and regressor chaining strategies via `mlr3pipelines`.
 
 ## Resources
