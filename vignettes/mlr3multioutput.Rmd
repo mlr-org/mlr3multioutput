@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(mlr3)
+library(mlr3pipelines)
 library(mlr3multioutput)
 ```
 
@@ -44,7 +45,7 @@ t
 ## Learner
 git st
 ```{r}
-l = lrn("multiout.featurelessq()")
+l = lrn("multiout.featureless")
 l
 ```
 
