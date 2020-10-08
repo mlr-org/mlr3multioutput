@@ -1,2 +1,4 @@
 ^mlr3multioutput\.Rproj$
 ^\.Rproj\.user$
+^\.ccache$
+^\.github$
