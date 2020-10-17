@@ -47,6 +47,7 @@ Collate:
     'PipeOps.R'
     'PredictionMultiOutput.R'
     'TaskMultiOutput.R'
+    'TaskMultiOutput_flags.R'
     'TaskMultiOutput_linnerud.R'
     'task_converters.R'
     'zzz.R'
