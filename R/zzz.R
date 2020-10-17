@@ -10,7 +10,8 @@
 register_mlr3 = function() {
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
 
-  if (length(x$task_types[list("multiout"), on = "type", which = TRUE, nomatch = NULL]) == 0L) {
+  if (!grepl("multiout", x$task_types[, "type"])) {
+    x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
     x$task_types = setkeyv(rbind(x$task_types, rowwise_table(
       ~type, ~package, ~task, ~learner, ~prediction, ~measure,
       "multiout", "mlr3multiout", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
@@ -48,10 +49,23 @@ register_mlr3 = function() {
   x$add("multiout.custom", MeasureMultiOutputWeightedAvg, measures = defs)
 }
 
+register_mlr3pipelines = function() {
+  x = utils::getFromNamespace("mlr_pipeops", ns = "mlr3pipelines")
+
+  x$add("multioutsplit", PipeOpSplitMultiout)
+  x$add("multioutunite", PipeOpPredictionMultiOutUnite)
+  x$add("multilrn", PipeOpMultiLearner)
+}
+
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
   register_mlr3()
+  if (requireNamespace("mlr3pipelines", quietly = TRUE)) {
+    register_mlr3pipelines()
+  }
+
   setHook(packageEvent("mlr3", "onLoad"), function(...) register_mlr3(), action = "append")
+  setHook(packageEvent("mlr3pipelines", "onLoad"), function(...) register_mlr3pipelines(), action = "append")
   backports::import(pkgname)
 } # nocov end
 
@@ -62,4 +76,11 @@ register_mlr3 = function() {
   hooks = getHook(event)
   pkgname = vapply(hooks[-1], function(x) environment(x)$pkgname, NA_character_)
   setHook(event, hooks[pkgname != "mlr3multioutput"], action = "replace")
+
+  event = packageEvent("mlr3pipelines", "onLoad")
+  hooks = getHook(event)
+  pkgname = vapply(hooks[-1], function(x) environment(x)$pkgname, NA_character_)
+  setHook(event, hooks[pkgname != "mlr3multioutput"], action = "replace")
+
+  library.dynam.unload("mlr3multioutput", libpath)
 } # nocov end
