@@ -92,8 +92,6 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
   )
 )
 
-mlr3pipelines::mlr_pipeops$add("multioutsplit", PipeOpSplitMultiout)
-
 
 #' @title PipeOpPredictionMultiOutUnite
 #'
@@ -160,7 +158,6 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
   )
 )
 
-mlr3pipelines::mlr_pipeops$add("multioutunite", PipeOpPredictionMultiOutUnite)
 
 #' @title PipeOpMultiLearner
 #'
@@ -331,5 +328,3 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
 
   )
 )
-
-mlr3pipelines::mlr_pipeops$add("multilrn", PipeOpMultiLearner)
