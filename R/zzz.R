@@ -35,6 +35,7 @@ register_mlr3 = function() {
 
   x = utils::getFromNamespace("mlr_tasks", ns = "mlr3")
   x$add("linnerud", load_task_linnerud)
+  x$add("flags", load_task_flags)
 
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
   x$add("multiout.featureless", LearnerMultiOutputFeatureless)

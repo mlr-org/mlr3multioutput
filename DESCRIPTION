@@ -31,6 +31,7 @@ Suggests:
     mlr3keras,
     mlbench,
     plsdepot,
+    mldr.datasets,
     testthat,
     knitr,
     rmarkdown
@@ -47,6 +48,7 @@ Collate:
     'PipeOps.R'
     'PredictionMultiOutput.R'
     'TaskMultiOutput.R'
+    'TaskMultiOutput_flags.R'
     'TaskMultiOutput_linnerud.R'
     'task_converters.R'
     'zzz.R'
