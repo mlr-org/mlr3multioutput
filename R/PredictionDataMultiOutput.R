@@ -38,7 +38,6 @@ is_missing_prediction_data.PredictionDataMultiOutput = function(pdata) { # nolin
 
 #' @export
 c.PredictionDataMultiOutput = function(..., keep_duplicates = TRUE) {
-  browser()
   dots = list(...)
   assert_list(dots, "PredictionDataMultiOutput")
   assert_flag(keep_duplicates)
