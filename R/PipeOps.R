@@ -244,7 +244,7 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
       id = id %??% paste0(map_chr(private$.learners, "id"), collapse = "_")
       task_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$task      # nolint
       out_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$prediction # nolint
-      ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = i; x$param_set}))
+      ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = paste0("learner_", i); x$param_set}))
       super$initialize(id, param_vals = param_vals,
         param_set = ps,
         input = data.table(name = "input", train = "[Task]", predict = "[Task]"),

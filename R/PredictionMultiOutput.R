@@ -20,21 +20,26 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #'
     #' @param predictions (`list()`)\cr
     #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
-    initialize = function(task = NULL, row_ids = task$row_ids, predictions) {
+    #'
+    #' @param check (`logical(1)`)\cr
+    #'   If `TRUE`, performs argument checks and predict type conversions.
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions, check = TRUE) {
+      pdata = list(row_ids = row_ids, predictions = map(predictions, as_prediction_data))
+      pdata = discard(pdata, is.null)
+      class(pdata) = c("PredictionDataMultiOutput", "PredictionData")
 
-      if (!is.null(task) && !missing(predictions))
-        assert_true(all(names(predictions) == task$target_names))
-      if (length(row_ids) > 0L) {
-        assert_true(all.equal(
-          Reduce(function(x, y) if (identical(x,y)) x else FALSE,  map(predictions, "row_ids")),
-          assert_row_ids(row_ids)
-        ))
+      if (check) {
+        pdata = check_prediction_data(pdata)
       }
+
+      if (!is.null(task) && !is.null(pdata$predictions)) {
+        assert_true(all(names(pdata$predictions) == task$target_names))
+      }
+
       self$task_type = "multiout"
-      if (!missing(predictions)) {
-        self$predict_types = unique(map_chr(predictions, "predict_types"))
-        self$data$predictions = map(predictions, assert_prediction)
-      }
+      self$man = "mlr3multioutput::PredictionMultiOutput"
+      self$data = pdata
+      self$predict_types = intersect(unique(unlist(lapply(pdata$predictions, names))), c("response", "prob"))
     },
     #' @description
     #' Printer for the Prediction object.
@@ -47,7 +52,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
       } else {
         data = as.data.table(self)
         catf("%s for %i observations", format(self), nrow(data))
-        catf("Targets: %s", paste(names(self$data$predictions), sep = ","))
+        catf("Targets: %s", paste(names(self$predictions), sep = ","))
         print(data, nrows = 10L, topn = 3L, class = FALSE, row.names = FALSE, print.keys = FALSE)
       }
     },
@@ -64,7 +69,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
       map(measures, assert_measure)
       if (!missing(task)) assert_task(task)
       imap(measures, function(x) {
-        x$score_separate(self$predictions, task)
+        x$score_separate(as_prediction(self$predictions), task)
       })
     }
   ),
@@ -72,13 +77,13 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' @field predictions (`list()`)\cr
     #' Access the stored predictions.
     predictions = function() {
-      self$data$predictions %??% rep(NA_real_, length(self$data$row_ids))
+      map(self$data$predictions, as_prediction) %??% rep(NA_real_, length(self$data$row_ids))
     },
 
     #' @field missing (`integer()`)\cr
     #' Returns `row_ids` for which the predictions are missing or incomplete.
     missing = function() {
-      unique(unlist(map(self$predictions, "missing")))
+      unique(unlist(map(self$data$predictions, "missing")))
     },
     #' @field row_ids (`integer()`)\cr
     #' Access the stored row_ids.
@@ -99,29 +104,3 @@ as.data.table.PredictionMultiOutput = function(x, ...) { #nolint
   }))
 }
 
-#' @export
-c.PredictionMultiOutput = function(..., keep_duplicates = TRUE) {
-
-  dots = list(...)
-  assert_list(dots, "PredictionMultiOutput")
-  assert_flag(keep_duplicates)
-  if (length(dots) == 1L || TRUE) {
-    return(dots[[1L]])
-  }
-
-  predict_types = map(dots, "predict_types")
-  if (!every(predict_types[-1L], setequal, y = predict_types[[1L]])) {
-    stopf("Cannot rbind predictions: Different predict_types in objects.")
-  }
-
-  tab = map_dtr(dots, function(p) subset(p$data$tab), .fill = FALSE)
-  prob = do.call(rbind, map(dots, "prob"))
-
-  if (!keep_duplicates) {
-    keep = !duplicated(tab, by = "row_id", fromLast = TRUE)
-    tab = tab[keep]
-    prob = prob[keep, , drop = FALSE]
-  }
-
-  PredictionMultiOutput$new(row_ids = tab$row_id, partition = tab$partition, prob = prob)
-}
