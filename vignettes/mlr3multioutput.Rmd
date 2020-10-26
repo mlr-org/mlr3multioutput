@@ -88,7 +88,7 @@ p$score(m1)
 - `po("splitmultiout")`: Splits a `TaskMultiOutput` into one `Task` for each target.
 
 ```{r}
-po("splitmultiout")$train(list(t))
+po("multioutsplit")$train(list(t))
 ```
 
 - `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultiOutput`.
@@ -100,13 +100,13 @@ po("multioutunite") # See example below.
 - `po("multilrn")`: Applies one or several `Learner`s for each Task in a `Multiplicity`.
 
 ```{r}
-po("multilrn", lrns = list(lrn("regr.rpart"), lrn("classif.rpart")))
+po("multilrn", learners = list(lrn("regr.rpart"), lrn("classif.rpart")))
 ```
 
 ### Approach 1: Multiplicity (same learner for all targets)
 
 ```{r}
-gr = po("splitmultiout") %>>%
+gr = po("multioutsplit") %>>%
  lrn("regr.rpart") %>>%
  po("multioutunite")
 gr = GraphLearner$new(gr)
@@ -120,8 +120,8 @@ gr$predict(t)
 **API**:
 
 ```{r}
-gr = po("splitmultiout") %>>%
- po("multilrn", lrns = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
+gr = po("multioutsplit") %>>%
+ po("multilrn", learners = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
 
 gl = GraphLearner$new(gr)
 gl$train(t)
@@ -141,7 +141,7 @@ Current problems:
 **Internals**
 
 ```{r}
-gr = po("splitmultiout") %>>%
+gr = po("multioutsplit") %>>%
   po("multiplicityexply", outnum = 3) %>>%
   gunion(list(
     lrn("regr.rpart", id = "rp1"),
@@ -161,7 +161,7 @@ prds
 
 **Not implemented**
 
-```{r}
+```{r, eval = FALSE}
 library(mlr3keras)
 lrn("multiout.kerasff")
 ```
@@ -169,7 +169,7 @@ lrn("multiout.kerasff")
 
 ## Example Pipeline
 
-```{r}
+```{r, eval = FALSE}
 library(mlr3)
 library(mlr3multioutput)
 library(mlr3pipelines)

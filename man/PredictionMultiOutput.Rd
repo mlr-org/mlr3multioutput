@@ -49,7 +49,12 @@ Access the stored row_ids.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(task = NULL, row_ids = task$row_ids, predictions)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(
+  task = NULL,
+  row_ids = task$row_ids,
+  predictions,
+  check = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,6 +68,9 @@ Row ids of the predicted observations, i.e. the row ids of the test set.}
 
 \item{\code{predictions}}{(\code{list()})\cr
 (Named) list of per-target predictions. Used to construct the \code{Prediction}-object.}
+
+\item{\code{check}}{(\code{logical(1)})\cr
+If \code{TRUE}, performs argument checks and predict type conversions.}
 }
 \if{html}{\out{</div>}}
 }
