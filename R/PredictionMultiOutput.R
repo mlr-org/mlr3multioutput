@@ -103,4 +103,3 @@ as.data.table.PredictionMultiOutput = function(x, ...) { #nolint
       dt = as.data.table(x)[, row_id := NULL]
   }))
 }
-

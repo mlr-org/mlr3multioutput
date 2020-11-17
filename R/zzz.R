@@ -17,13 +17,13 @@ register_mlr3 = function() {
       "multiout", "mlr3multiout", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
     )), "type")
     x$task_col_roles$multiout = c(unique(unlist(x$task_col_roles)), c("target_regr", "target_classif"))
-    x$task_properties$multiout = x$task_properties$regr
-    x$measure_properties$multiout = x$measure_properties$regr
+    x$task_properties$multiout = c(x$task_properties$regr, "multilabel")
+    x$measure_properties$multiout = c(x$measure_properties$regr, "multilabel")
     x$default_measures$multiout = "multiout.default"
 
     # predict_types are predict_types of all other task types.
     prd_types = do.call("c", unname(x$learner_predict_types))
-    x$learner_predict_types$multiout = prd_types[!duplicated(prd_types)]
+    x$learner_predict_types$multiout = c(prd_types[!duplicated(prd_types)], "multilabel")
     x$learner_properties$multiout = unique(unlist(x$learner_properties))
     x$task_target_types = rowwise_table(
       ~type, ~task_type,

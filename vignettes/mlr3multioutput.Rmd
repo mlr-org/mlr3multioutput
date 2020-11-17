@@ -43,7 +43,8 @@ t
 
 
 ## Learner
-git st
+
+
 ```{r}
 l = lrn("multiout.featureless")
 l

@@ -63,3 +63,41 @@ c.PredictionDataMultiOutput = function(..., keep_duplicates = TRUE) {
 
   PredictionMultiOutput$new(row_ids = tab$row_id, partition = tab$partition, prob = prob)
 }
+
+
+
+#' Convert a data.table prediction object from learners that inherently can do e.g. multilabel.
+#'
+#' @param data [`data.table`]\cr
+#'   Contains predictions, must have row_id.
+# Input is of the form:
+# data = list(
+#   targetname = list(
+#     row_ids = 1:10,
+#     truth = 1,
+#     response = 1,
+#     prob = 1,
+#   ),
+#   target2 = list(
+#     row_ids = 1:10,
+#     truth = 1,
+#     response = 1,
+#     prob = 1,
+#   )
+# )
+# This is already saved in the task
+# target_types = list("targetname" = "regr", "target2" = "classif")
+#' @param task_types [`character`]\cr
+#'   Named character vector of per-target task-types.
+#'   E.g. c(tgt1 = "regr", tgt2 = "classif")
+as.PredictionDataMultiOutput = function(data, target_types) {
+  assert_equal(names(data), names(target_types))
+  imap(target_types, function(x, i) {
+    invoke(PredictionXXX$new, data[[i]])
+  })
+}
+# FIXME Improve docs, write and test code.
+# new_prediction_data(
+#         list(row_ids = row_ids, truth = truth, response = response, prob = prob),
+#         task_type = "classif"
+#       )
