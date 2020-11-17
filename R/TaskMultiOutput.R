@@ -36,15 +36,11 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
   ),
   private = list(
     .update_class_property = function() {
-      # FIXME: This needs the .update_class_property approach from TaskClassif in mlr3
       # Checks whether all targets are binary & classif
-      # nlvls = length(self$class_names)
-      # if (nlvls < 2L) {
-      #   stopf("Target column '%s' must have at least two levels", self$target_names)
-      # }
+      mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {test_factor(x, len = self$nrow, n.levels = 2L)}))
 
-      # private$.properties = setdiff(private$.properties, c("twoclass", "multiclass"))
-      # private$.properties = union(private$.properties, if (nlvls == 2L) "twoclass" else "multiclass")
+      private$.properties = setdiff(private$.properties, c("multiout", "multilabel"))
+      private$.properties = union(private$.properties, if (mlbl) "multilabel" else "multiout")
     }
   )
 )
