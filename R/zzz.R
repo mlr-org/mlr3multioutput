@@ -14,7 +14,7 @@ register_mlr3 = function() {
     x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
     x$task_types = setkeyv(rbind(x$task_types, rowwise_table(
       ~type, ~package, ~task, ~learner, ~prediction, ~measure,
-      "multiout", "mlr3multiout", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
+      "multiout", "mlr3multioutput", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
     )), "type")
     x$task_col_roles$multiout = c(unique(unlist(x$task_col_roles)), c("target_regr", "target_classif"))
     x$task_properties$multiout = c(x$task_properties$regr, "multilabel")
