@@ -91,9 +91,10 @@ c.PredictionDataMultiOutput = function(..., keep_duplicates = TRUE) {
 #'   Named character vector of per-target task-types.
 #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
 as.PredictionDataMultiOutput = function(data, target_types) {
+  browser()
   assert_equal(names(data), names(target_types))
   imap(target_types, function(x, i) {
-    invoke(PredictionXXX$new, data[[i]])
+    invoke(new_prediction_data, data[[i]])
   })
 }
 # FIXME Improve docs, write and test code.
