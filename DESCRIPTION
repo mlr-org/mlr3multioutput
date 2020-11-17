@@ -46,6 +46,7 @@ Collate:
     'LearnerMultioutputCforest.R'
     'LearnerMultioutputFeatureless.R'
     'MeasureMultioutput.R'
+    'MeasureMultioutputCustomAggr.R'
     'MeasureMultioutputExactMatchingRatio.R'
     'MeasureMultioutputWeightedAvg.R'
     'PipeOps.R'

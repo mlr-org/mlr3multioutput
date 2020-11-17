@@ -15,9 +15,10 @@ check_prediction_data.PredictionDataMultioutput = function(pdata) { # nolint
       assert_row_ids(pdata$row_ids)
     ))
   }
-  if (!is.null(pdata$predictions)) {
+  # FIXME What should happen here
+  # if (!is.null(pdata$predictions)) {
   #   pdata$predictions = map(predictions, assert_prediction) # assert_prediction_data
-  }
+  #}
 
   pdata
 }

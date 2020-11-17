@@ -7,7 +7,7 @@
 #' @importFrom R6 R6Class
 "_PACKAGE"
 
-register_mlr3 = function() {
+register_mlr3 = function() { # nolint
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
 
   if (!grepl("multioutput", x$task_types[, "type"])) {
@@ -40,6 +40,7 @@ register_mlr3 = function() {
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
   x$add("multioutput.featureless", LearnerMultioutputFeatureless)
   x$add("multioutput.cforest", LearnerMultioutputCForest)
+  x$add("multioutput.keras", LearnerMultioutputKeras)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multioutput"))], msr)
