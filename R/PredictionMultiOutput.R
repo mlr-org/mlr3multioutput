@@ -17,13 +17,14 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #'
     #' @param row_ids (`integer()`)\cr
     #'   Row ids of the predicted observations, i.e. the row ids of the test set.
-    #'
     #' @param predictions (`list()`)\cr
     #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
     #'
     #' @param check (`logical(1)`)\cr
     #'   If `TRUE`, performs argument checks and predict type conversions.
-    initialize = function(task = NULL, row_ids = task$row_ids, predictions, check = TRUE) {
+    #' @param ... (`list()`)\cr
+    #'   (Named) list of per-target truths. Only used for compatibility with `Prediction$new()`.
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions = list(), check = TRUE, ...) {
       pdata = list(row_ids = row_ids, predictions = map(predictions, as_prediction_data))
       pdata = discard(pdata, is.null)
       class(pdata) = c("PredictionDataMultioutput", "PredictionData")

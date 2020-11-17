@@ -12,5 +12,5 @@ test_that("Learner properties are respected", {
   learner = mlr_learners$get("multioutput.featureless")
   expect_learner(learner, task)
   p = learner$train(task)$predict(task)
-  expect_prediction_multiout(p)
+  expect_prediction_multioutput(p)
 })

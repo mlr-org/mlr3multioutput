@@ -75,15 +75,15 @@ gr$train(task)
 gr$predict(task)
 }
 \seealso{
-Other PipeOps:
+Other PipeOps: 
 \code{\link{mlr_pipeops_multioutsplit}},
 \code{\link{mlr_pipeops_multioutunite}}
 
-Other Multiplicity PipeOps:
+Other Multiplicity PipeOps: 
 \code{\link{mlr_pipeops_multioutsplit}},
 \code{\link{mlr_pipeops_multioutunite}}
 
-Other Experimental Features:
+Other Experimental Features: 
 \code{\link{mlr_pipeops_multioutsplit}},
 \code{\link{mlr_pipeops_multioutunite}}
 }

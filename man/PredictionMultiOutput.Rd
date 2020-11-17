@@ -52,8 +52,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{PredictionMultiOutput$new(
   task = NULL,
   row_ids = task$row_ids,
-  predictions,
-  check = TRUE
+  predictions = list(),
+  check = TRUE,
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -71,6 +72,9 @@ Row ids of the predicted observations, i.e. the row ids of the test set.}
 
 \item{\code{check}}{(\code{logical(1)})\cr
 If \code{TRUE}, performs argument checks and predict type conversions.}
+
+\item{\code{...}}{(\code{list()})\cr
+(Named) list of per-target truths. Only used for compatibility with \code{Prediction$new()}.}
 }
 \if{html}{\out{</div>}}
 }

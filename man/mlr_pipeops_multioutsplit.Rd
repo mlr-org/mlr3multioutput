@@ -77,15 +77,15 @@ po$train(list(task))
 po$predict(list(task))
 }
 \seealso{
-Other PipeOps:
+Other PipeOps: 
 \code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
-Other Multiplicity PipeOps:
+Other Multiplicity PipeOps: 
 \code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
-Other Experimental Features:
+Other Experimental Features: 
 \code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 }
