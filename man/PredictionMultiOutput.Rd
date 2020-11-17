@@ -7,6 +7,10 @@
 This object wraps the predictions returned by a learner of class \link{LearnerMultiOutput}, i.e.
 the predicted partition and MultiOutputer probability.
 }
+\seealso{
+Other Prediction: 
+\code{\link{PredictionClassif}}
+}
 \concept{Prediction}
 \section{Super class}{
 \code{\link[mlr3:Prediction]{mlr3::Prediction}} -> \code{PredictionMultiOutput}

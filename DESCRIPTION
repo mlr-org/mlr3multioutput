@@ -29,6 +29,8 @@ Imports:
     R6
 Suggests:
     mlr3keras,
+    keras,
+    rpart,
     mlbench,
     plsdepot,
     mldr.datasets,
@@ -43,10 +45,13 @@ RoxygenNote: 7.1.1
 Collate:
     'LearnerMultiOutput.R'
     'LearnerMultiOutputFeatureless.R'
+    'LearnerMultiOutputKeras.R'
     'MeasureMultiOutput.R'
     'MeasureMultiOutputWeightedAvg.R'
     'PipeOps.R'
+    'PredictionDataMultiLabel.R'
     'PredictionDataMultiOutput.R'
+    'PredictionMultiLabel.R'
     'PredictionMultiOutput.R'
     'TaskMultiOutput.R'
     'TaskMultiOutput_flags.R'
