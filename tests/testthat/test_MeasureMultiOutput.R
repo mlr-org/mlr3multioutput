@@ -1,4 +1,4 @@
-context("MeasureMultiOutput")
+context("MeasureMultiOutput - All measures")
 
 test_that("Multioutput measures", {
   keys = mlr_measures$keys("multioutput")

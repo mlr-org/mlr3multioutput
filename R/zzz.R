@@ -7,7 +7,7 @@
 #' @importFrom R6 R6Class
 "_PACKAGE"
 
-register_mlr3 = function() {
+register_mlr3 = function() { # nolint
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
 
   if (!grepl("multioutput", x$task_types[, "type"])) {
