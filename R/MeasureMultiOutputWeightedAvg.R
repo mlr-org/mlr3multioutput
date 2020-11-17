@@ -3,8 +3,8 @@
 #' @description
 #' Computes a weighted average over measured scores for each target.
 #'
-#' * measures that should be maximized are automatically multiplied by '-1' internally during aggregation
-#'   and `minimize` is therefore set to `TRUE`
+#' * measures that should be maximized are automatically multiplied by '-1' internally during
+#'   aggregation and `minimize` is therefore set to `TRUE`
 #' * `task_type` is set to `"multioutput"`.
 #' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
 #'   They are currently collected by accessing each [`Measure`]s "predict_type" slot.

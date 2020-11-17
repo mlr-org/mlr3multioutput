@@ -33,8 +33,8 @@ be set during construction. Default \code{list()}.
 
 \section{Input and Output Channels}{
 
-\code{\link{PipeOpSplitMultiout}} has one input channel named \code{"input"} taking a \code{\link{TaskMultiOutput}}
-both during training and prediction.
+\code{\link{PipeOpSplitMultiout}} has one input channel named \code{"input"} taking a
+\code{\link{TaskMultiOutput}} both during training and prediction.
 
 \code{\link{PipeOpSplitMultiout}} has one output channel named \code{"output"} returning a \code{\link{Multiplicity}} of
 \code{\link[mlr3:Task]{Tasks}}s both during training and prediction.
@@ -127,8 +127,8 @@ Initialize a new R6 class.
 Identifier of the resulting  object, internally defaulting "targetsplit".}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set
-during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would
+otherwise be set during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }

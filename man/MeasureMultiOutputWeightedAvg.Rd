@@ -6,8 +6,8 @@
 \description{
 Computes a weighted average over measured scores for each target.
 \itemize{
-\item measures that should be maximized are automatically multiplied by '-1' internally during aggregation
-and \code{minimize} is therefore set to \code{TRUE}
+\item measures that should be maximized are automatically multiplied by '-1' internally during
+aggregation and \code{minimize} is therefore set to \code{TRUE}
 \item \code{task_type} is set to \code{"multioutput"}.
 \item Possible values for \code{predict_type} are all values from \code{mlr_reflections$learner_predict_types}.
 They are currently collected by accessing each \code{\link{Measure}}s "predict_type" slot.

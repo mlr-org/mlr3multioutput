@@ -22,6 +22,7 @@
 #'
 #' @seealso
 #' Example measures:
+#' msr("multioutput.custom")
 #' @export
 MeasureMultiOutput = R6Class("MeasureMultiOutput",
   inherit = Measure, cloneable = FALSE,

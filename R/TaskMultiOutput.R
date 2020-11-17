@@ -40,7 +40,9 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
   private = list(
     .update_class_property = function() {
       # Checks whether all targets are binary & classif
-      mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {test_factor(x, len = self$nrow, n.levels = 2L)}))
+      mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {
+        test_factor(x, len = self$nrow, n.levels = 2L)
+      }))
 
       private$.properties = setdiff(private$.properties, c("multioutput", "multilabel"))
       private$.properties = union(private$.properties, if (mlbl) "multilabel" else "multioutput")

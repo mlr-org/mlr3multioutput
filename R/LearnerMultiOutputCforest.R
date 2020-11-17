@@ -1,4 +1,5 @@
-# See also: https://github.com/mlr-org/mlr3extralearners/blob/master/R/learner_partykit_classif_cforest.R
+# See also:
+# https://github.com/mlr-org/mlr3extralearners/blob/master/R/learner_partykit_classif_cforest.R
 
 
 # #' @export

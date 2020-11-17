@@ -40,7 +40,10 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
       self$task_type = "multioutput"
       self$man = "mlr3multioutput::PredictionMultiOutput"
       self$data = pdata
-      self$predict_types = intersect(unique(unlist(lapply(pdata$predictions, names))), c("response", "prob"))
+      self$predict_types = intersect(
+        unique(unlist(lapply(pdata$predictions, names))),
+        c("response", "prob")
+      )
     },
     #' @description
     #' Printer for the Prediction object.

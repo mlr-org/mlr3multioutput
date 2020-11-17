@@ -8,10 +8,10 @@
 \code{\link{R6Class}} inheriting from \code{\link{PipeOpEnsemble}}/\code{\link{PipeOp}}.
 }
 \description{
-Unite a set of "classif", "regr"' \code{\link[mlr3:Prediction]{Predictions}} into a \code{\link{PredictionMultiOutput}}.
-
-This \code{\link{PipeOp}} uses a \code{\link{Multiplicity}} input, which is created by \code{\link{PipeOpMultiplicityImply}} or other
-\code{\link{PipeOp}}s that implicate a \code{\link{Multiplicity}}.
+Unite a set of "classif", "regr"' \code{\link[mlr3:Prediction]{Predictions}} into a
+\code{\link{PredictionMultiOutput}}.
+This \code{\link{PipeOp}} uses a \code{\link{Multiplicity}} input, which is created by \code{\link{PipeOpMultiplicityImply}}
+or other \code{\link{PipeOp}}s that implicate a \code{\link{Multiplicity}}.
 
 Note that \code{\link{Multiplicity}} is currently an experimental feature and the implementation or UI
 may change.
@@ -102,7 +102,8 @@ Initialize a new R6 class.
 Identifier of the resulting  object, defaults to "multioutunite".}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would
+otherwise be set during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }
