@@ -123,7 +123,6 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
 
   private = list(
     .train = function(task) {
-      browser()
       pars = self$param_set$get_values(tags = "train")
       pars_control = pars[which(names(pars) %in%
         setdiff(methods::formalArgs(partykit::ctree_control),
@@ -153,7 +152,6 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
     },
 
     .predict = function(task) {
-      browser()
       pars = self$param_set$get_values(tags = "predict")
       newdata = task$data(cols = task$feature_names)
       preds = mlr3misc::invoke(predict, object = self$model, newdata = newdata,
@@ -163,23 +161,23 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
         p = map(task$target_names, function(t) {
           list(
             row_ids = task$row_ids,
-            truth = task$truth[t],
-            response = preds[t]
+            truth = task$truth()[[t]],
+            response = preds[[t]]
           )
         })
-        names(p) = task$target_names
-        as_prediction(as.PredictionDataMultioutput(p, task$task_types))
       } else {
         p = map(task$target_names, function(t) {
           list(
             row_ids = task$row_ids,
-            truth = task$truth[t],
-            prob = preds[t] # FIXME
+            truth = task$truth[[t]],
+            prob = preds[[t]] # FIXME
           )
         })
-        names(p) = task$target_names
-        as_prediction(as.PredictionDataMultioutput(p, task$task_types))
       }
+
+      names(p) = task$target_names
+      preds = map(as.PredictionDataMultioutput(p, task$task_types), as_prediction)
+      PredictionMultioutput$new(task, task$row_ids, preds)
     }
   )
 )

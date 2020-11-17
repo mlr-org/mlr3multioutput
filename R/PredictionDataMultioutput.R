@@ -92,14 +92,10 @@ c.PredictionDataMultioutput = function(..., keep_duplicates = TRUE) {
 #'   Named character vector of per-target task-types.
 #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
 as.PredictionDataMultioutput = function(data, target_types) {
-  browser()
-  assert_equal(names(data), names(target_types))
+  expect_equal(names(data), names(target_types))
   imap(target_types, function(x, i) {
-    invoke(new_prediction_data, data[[i]])
+    invoke(mlr3:::new_prediction_data, data[[i]], task_type = x)
   })
 }
 # FIXME Improve docs, write and test code.
-# new_prediction_data(
-#         list(row_ids = row_ids, truth = truth, response = response, prob = prob),
-#         task_type = "classif"
-#       )
+# Add as_prediction here?
