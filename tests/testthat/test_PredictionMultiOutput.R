@@ -6,5 +6,5 @@ test_that("Construction", {
     PredictionRegr$new(row_ids = task$row_ids, truth = task$data(cols = nm)[[1]], response = task$row_ids)
   }), task$target_names)
   p = PredictionMultiOutput$new(row_ids = task$row_ids, predictions = prds)
-  expect_prediction(p)
+  expect_prediction_multioutput(p)
 })

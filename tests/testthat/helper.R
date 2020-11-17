@@ -1,12 +1,4 @@
-library(mlr3)
-library(mlr3pipelines)
-library(mlr3multioutput)
-library(checkmate)
-library(testthat)
-
-lapply(list.files(system.file("testthat", package = "mlr3"),
-  pattern = "^helper.*\\.[rR]$", full.names = TRUE
-), source)
+lapply(list.files(system.file("testthat", package = "mlr3"), pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
 generate_tasks.LearnerMultiOutput = function(learner, N = 20L) { # nolint
   set.seed(1)
@@ -35,7 +27,7 @@ registerS3method("sanity_check", "PredictionMultiOutput", sanity_check.Predictio
 
 
 expect_prediction_multioutput = function(p) {
-  expect_prediction(p)
+  with(.GlobalEnv, expect_prediction)(p)
   checkmate::expect_r6(p, "PredictionMultiOutput",
     public = c("row_ids", "truth", "predict_types")
   )
