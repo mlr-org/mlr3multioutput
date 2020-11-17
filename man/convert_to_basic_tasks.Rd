@@ -7,10 +7,10 @@
 convert_to_basic_tasks(task)
 }
 \arguments{
-\item{task}{\code{\link{TaskMultiOutput}}\cr
+\item{task}{\code{\link{TaskMultioutput}}\cr
 Multi-output task to split into tasks of type \code{task$task_types}.}
 }
 \description{
-Splits a \code{\link{TaskMultiOutput}} into several \code{\link{Task}}s of type "regr", "classif", ...
+Splits a \code{\link{TaskMultioutput}} into several \code{\link{Task}}s of type "regr", "classif", ...
 according to "task$task_types".
 }

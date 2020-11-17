@@ -1,11 +1,11 @@
-#' @title MultiOutput weighted average Measure
+#' @title Multioutput weighted average Measure
 #'
 #' @description
 #' Computes a weighted average over measured scores for each target.
 #'
-#' * measures that should be maximized are automatically multiplied by '-1' internally during aggregation
-#'   and `minimize` is therefore set to `TRUE`
-#' * `task_type` is set to `"multiout"`.
+#' * measures that should be maximized are automatically multiplied by '-1' internally during
+#'   aggregation and `minimize` is therefore set to `TRUE`
+#' * `task_type` is set to `"multioutput"`.
 #' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
 #'   They are currently collected by accessing each [`Measure`]s "predict_type" slot.
 #'   Currently limited to only a single 'predict_type' across all measures.
@@ -18,34 +18,34 @@
 #' @seealso
 #' Example measures:
 #' @export
-MeasureMultiOutputWeightedAvg = R6Class("MeasureMultiOutputWeightedAvg",
-  inherit = MeasureMultiOutput,
+MeasureMultioutputWeightedAvg = R6Class("MeasureMultioutputWeightedAvg",
+  inherit = MeasureMultioutput,
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @template param_measure_multioutput_weightedavg
     #'
-    #' @return A [`MeasureMultiOutput`]
+    #' @return A [`MeasureMultioutput`]
     initialize = function(name = "weightedavg", measures, weights = NULL) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
       self$weights = assert_numeric(weights, null.ok = TRUE)
       super$initialize(
-        id = paste0("multiout.", name),
+        id = paste0("multioutput.", name),
         range = private$.compute_range(),
         minimize = TRUE,
         predict_type = assert_string(unique(map_chr(measures, "predict_type"))),
         packages = assert_character(unique(map_chr(measures, "packages"))),
         properties = unlist(map(measures, "properties")),
-        man = paste0("mlr3multioutput::mlr_measures_multiout.", name)
+        man = paste0("mlr3multioutput::mlr_measures_multioutput.", name)
       )
     },
     #' @description
     #' Returns scores for each measure in self$measures separately.
     #'
-    #' @param prediction [`PredictionMultiOutput`]\cr
+    #' @param prediction [`PredictionMultioutput`]\cr
     #'   Prediction to score.
-    #' @param task [`TaskMultiOutput`]\cr
+    #' @param task [`TaskMultioutput`]\cr
     #'   Task to score.
     #' @param ... (`any`)\cr
     #'   Currently not used.

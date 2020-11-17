@@ -1,7 +1,7 @@
 #' @title flags Task
 #'
 #' @name mlr_tasks_flags
-#' @format [R6::R6Class] inheriting from [TaskMultiOutput].
+#' @format [R6::R6Class] inheriting from [TaskMultioutput].
 #'
 #' @section Construction:
 #' ```
@@ -19,7 +19,7 @@ load_task_flags = function(id = "flags") {
   target = c("red", "green", "blue", "yellow", "white", "black", "orange")
   d[, target] = as.data.frame(lapply(d[, target], as.factor))
   b = as_data_backend(d)
-  task = TaskMultiOutput$new(id, b, target = c("red", "green", "blue", "yellow", "white", "black", "orange"))
+  task = TaskMultioutput$new(id, b, target = c("red", "green", "blue", "yellow", "white", "black", "orange"))
   b$hash = task$man = "mlr3multioutput::mlr_tasks_flags"
   task
 }

@@ -9,7 +9,7 @@ test_that("Task converters regr", {
 })
 
 test_that("Task converters classif", {
-  t = generate_tasks(lrn("multiout.featureless"))[[1]]
+  t = generate_tasks(lrn("multioutput.featureless"))[[1]]
   tn = as_task_classif(t, target = "X2d")
   expect_task_classif(tn)
   expect_true(all(tn$feature_types == t$feature_types))

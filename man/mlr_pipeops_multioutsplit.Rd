@@ -8,9 +8,9 @@
 \code{\link{R6Class}} inheriting from \code{\link{PipeOp}}.
 }
 \description{
-Splits a \link[=TaskMultiOutput]{multioutput Task} into several \link[mlr3:Task]{Tasks}.
+Splits a \link[=TaskMultioutput]{multioutput Task} into several \link[mlr3:Task]{Tasks}.
 
-For each target_type in the original \link[=TaskMultiOutput]{multioutput Task}, a new \link[mlr3:Task]{Task}
+For each target_type in the original \link[=TaskMultioutput]{multioutput Task}, a new \link[mlr3:Task]{Task}
 containing the respective target and task_type is constructed.
 
 This \code{\link{PipeOp}} creates a \code{\link{Multiplicity}}, which means that subsequent \code{\link{PipeOp}}s are executed
@@ -33,8 +33,8 @@ be set during construction. Default \code{list()}.
 
 \section{Input and Output Channels}{
 
-\code{\link{PipeOpSplitMultiout}} has one input channel named \code{"input"} taking a \code{\link{TaskMultiOutput}}
-both during training and prediction.
+\code{\link{PipeOpSplitMultiout}} has one input channel named \code{"input"} taking a
+\code{\link{TaskMultioutput}} both during training and prediction.
 
 \code{\link{PipeOpSplitMultiout}} has one output channel named \code{"output"} returning a \code{\link{Multiplicity}} of
 \code{\link[mlr3:Task]{Tasks}}s both during training and prediction.
@@ -42,7 +42,7 @@ both during training and prediction.
 
 \section{State}{
 
-The \verb{$state} contains the original task_types of the \code{\link{TaskMultiOutput}} supplied
+The \verb{$state} contains the original task_types of the \code{\link{TaskMultioutput}} supplied
 during training.
 }
 
@@ -56,7 +56,7 @@ during training.
 
 The names of the element of the output \code{\link{Multiplicity}} are given by the levels of the target.
 
-Should be used in combination with \code{\link{PipeOpPredictionMultiOutUnite}}.
+Should be used in combination with \code{\link{PipeOpPredictionMultioutUnite}}.
 }
 
 \section{Fields}{
@@ -78,15 +78,15 @@ po$predict(list(task))
 }
 \seealso{
 Other PipeOps: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
 Other Multiplicity PipeOps: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 
 Other Experimental Features: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutunite}}
 }
 \concept{Experimental Features}
@@ -127,8 +127,8 @@ Initialize a new R6 class.
 Identifier of the resulting  object, internally defaulting "targetsplit".}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set
-during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would
+otherwise be set during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }

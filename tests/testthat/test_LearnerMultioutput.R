@@ -1,8 +1,8 @@
-context("test_LearnerMultiOutput")
+context("test_LearnerMultioutput")
 
 test_that("predict on newdata works / multiout", {
   task = tsk("linnerud")$filter(1:10)
-  learner = lrn("multiout.featureless")
+  learner = lrn("multioutput.featureless")
   expect_error(learner$predict(task), "trained")
   learner$train(task)
   expect_task(learner$state$train_task)
@@ -23,7 +23,7 @@ test_that("predict on newdata works / multiout", {
 
 test_that("reset()", {
   task = tsk("linnerud")
-  lrn = lrn("multiout.featureless")
+  lrn = lrn("multioutput.featureless")
 
   lrn$train(task)
   expect_list(lrn$state, names = "unique")
@@ -33,7 +33,7 @@ test_that("reset()", {
 
 test_that("empty predict set (#421)", {
   task = tsk("linnerud")
-  learner = lrn("multiout.featureless")
+  learner = lrn("multioutput.featureless")
   resampling = rsmp("holdout", ratio = 1)
   hout = resampling$instantiate(task)
   model = learner$train(task, hout$train_set(1))

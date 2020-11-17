@@ -1,9 +1,9 @@
-#' @title MultiOutput Learner
+#' @title Multioutput Learner
 #'
 #' @description
-#' This Learner specializes [mlr3::Learner] for MultiOuter problems:
-#' * `task_type` is set to `"MultiOut"`.
-#' * Creates [Prediction]s of class [PredictionMultiOut].
+#' This Learner specializes [mlr3::Learner] for Multioutputer problems:
+#' * `task_type` is set to `"Multioutput"`.
+#' * Creates [Prediction]s of class [PredictionMultioutput].
 #' * Possible values for `predict_types` are all `predict_types` available
 #'   for other `supervised` Tasks.
 #'
@@ -21,11 +21,11 @@
 #' @export
 #' @examples
 #' library(mlr3)
-#' ids = mlr_learners$keys("^MultiOutput")
+#' ids = mlr_learners$keys("^Multioutput")
 #' ids
 #'
 #' # get a specific learner from mlr_learners:
-LearnerMultiOutput = R6Class("LearnerMultiOutput",
+LearnerMultioutput = R6Class("LearnerMultioutput",
   inherit = Learner,
   public = list(
     #' @description
@@ -34,7 +34,7 @@ LearnerMultiOutput = R6Class("LearnerMultiOutput",
       feature_types = character(), properties = character(),
       packages = character()) {
       super$initialize(
-        id = id, task_type = "multiout", param_set = param_set,
+        id = id, task_type = "multioutput", param_set = param_set,
         predict_types = predict_types,
         feature_types = feature_types, properties = properties, packages = packages
       )

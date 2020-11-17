@@ -5,9 +5,9 @@
 #' @format [`R6Class`] inheriting from [`PipeOp`].
 #'
 #' @description
-#' Splits a [multioutput Task][TaskMultiOutput] into several [Tasks][mlr3::Task].
+#' Splits a [multioutput Task][TaskMultioutput] into several [Tasks][mlr3::Task].
 #'
-#' For each target_type in the original [multioutput Task][TaskMultiOutput], a new [Task][mlr3::Task]
+#' For each target_type in the original [multioutput Task][TaskMultioutput], a new [Task][mlr3::Task]
 #' containing the respective target and task_type is constructed.
 #'
 #' This [`PipeOp`] creates a [`Multiplicity`], which means that subsequent [`PipeOp`]s are executed
@@ -27,14 +27,14 @@
 #'   be set during construction. Default `list()`.
 #'
 #' @section Input and Output Channels:
-#' [`PipeOpSplitMultiout`] has one input channel named `"input"` taking a [`TaskMultiOutput`][TaskMultiOutput]
-#' both during training and prediction.
+#' [`PipeOpSplitMultiout`] has one input channel named `"input"` taking a
+#' [`TaskMultioutput`][TaskMultioutput] both during training and prediction.
 #'
 #' [`PipeOpSplitMultiout`] has one output channel named `"output"` returning a [`Multiplicity`] of
 #' [`Tasks`][mlr3::Task]s both during training and prediction.
 #'
 #' @section State:
-#' The `$state` contains the original task_types of the [`TaskMultiOutput`] supplied
+#' The `$state` contains the original task_types of the [`TaskMultioutput`] supplied
 #' during training.
 #'
 #' @section Parameters:
@@ -45,7 +45,7 @@
 #' The names of the element of the output [`Multiplicity`] are given by the levels of the target.
 #'
 
-#' Should be used in combination with [`PipeOpPredictionMultiOutUnite`].
+#' Should be used in combination with [`PipeOpPredictionMultioutUnite`].
 #'
 #' @section Fields:
 #' Only fields inherited from [`PipeOp`].
@@ -71,11 +71,11 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
     #' @param id `character(1)`\cr
     #'   Identifier of the resulting  object, internally defaulting "targetsplit".
     #' @param param_vals named `list`\cr
-    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set
-    #' during construction. Default `list()`.
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would
+    #'   otherwise be set during construction. Default `list()`.
     initialize = function(id = "targetsplit", param_vals = list()) {
       super$initialize(id, param_vals = param_vals,
-        input = data.table(name = "input", train = "TaskMultiOutput", predict = "TaskMultiOutput"),
+        input = data.table(name = "input", train = "TaskMultioutput", predict = "TaskMultioutput"),
         output = data.table(name = "output", train = "[Task]", predict = "[Task]"),
         tags = "multiplicity"
       )
@@ -93,17 +93,17 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
 )
 
 
-#' @title PipeOpPredictionMultiOutUnite
+#' @title PipeOpPredictionMultioutUnite
 #'
 #' @usage NULL
 #' @name mlr_pipeops_multioutunite
 #' @format [`R6Class`] inheriting from [`PipeOpEnsemble`]/[`PipeOp`].
 #'
 #' @description
-#' Unite a set of "classif", "regr"' [`Predictions`][mlr3::Prediction] into a [`PredictionMultiOutput`].
-#'
-#' This [`PipeOp`] uses a [`Multiplicity`] input, which is created by [`PipeOpMultiplicityImply`] or other
-#' [`PipeOp`]s that implicate a [`Multiplicity`].
+#' Unite a set of "classif", "regr"' [`Predictions`][mlr3::Prediction] into a
+#' [`PredictionMultioutput`].
+#' This [`PipeOp`] uses a [`Multiplicity`] input, which is created by [`PipeOpMultiplicityImply`]
+#'  or other [`PipeOp`]s that implicate a [`Multiplicity`].
 #'
 #' Note that [`Multiplicity`] is currently an experimental feature and the implementation or UI
 #' may change.
@@ -134,7 +134,7 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
 #' @family Multiplicity PipeOps
 #' @family Experimental Features
 #' @export
-PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
+PipeOpPredictionMultioutUnite = R6Class("PipeOpPredictionMultioutUnite",
   inherit = mlr3pipelines::PipeOpEnsemble,
   public = list(
     #' @description
@@ -143,9 +143,11 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
     #' @param id `character(1)`\cr
     #'   Identifier of the resulting  object, defaults to "multioutunite".
     #' @param param_vals named `list`\cr
-    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default `list()`.
+    #'   List of hyperparameter settings, overwriting the hyperparameter settings that would
+    #'   otherwise be set during construction. Default `list()`.
     initialize = function(id = "multioutunite", param_vals = list()) {
-      super$initialize(0, TRUE, id, param_vals = param_vals, prediction_type = "Prediction", tags = "multiplicity")
+      super$initialize(0, TRUE, id, param_vals = param_vals, prediction_type = "Prediction",
+        tags = "multiplicity")
     }
   ),
   private = list(
@@ -153,7 +155,7 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
       if (private$.collect) {
         inputs = unclass(inputs[[1]])
       }
-      list(PredictionMultiOutput$new(row_ids = inputs[[1]]$row_ids, predictions = inputs))
+      list(PredictionMultioutput$new(row_ids = inputs[[1]]$row_ids, predictions = inputs))
     }
   )
 )
@@ -162,26 +164,32 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 #' @title PipeOpMultiLearner
 #'
 #' @usage NULL
-#' @name mlr_pipeops_multilrn
+#' @name mlr_pipeops_multioutlrn
 #' @format [`R6Class`] object inheriting from [`PipeOp`].
 #'
 #' @description
 #' Wraps a `list` of [`mlr3::Learner`]s into a [`PipeOp`].
 #'
-#' Inherits the `$param_set`s (and therefore `$param_set$values`) from all [`Learner`][mlr3::Learner]s it is constructed from.
+#' Inherits the `$param_set`s (and therefore `$param_set$values`) from all
+#' [`Learner`][mlr3::Learner]s it is constructed from.
 #'
 #' @section Input and Output Channels:
-#' [`PipeOpMultiLearner`] has one input channel named `"input"`, taking a [`Task`][mlr3::Task] specific to the [`Learner`][mlr3::Learner]
+#' [`PipeOpMultiLearner`] has one input channel named `"input"`, taking a [`Task`][mlr3::Task]
+#' specific to the [`Learner`][mlr3::Learner]
 #' type given to `learner` during construction; both during training and prediction.
 #'
-#' [`PipeOpMultiLearner`] has one output channel named `"output"`, producing `NULL` during training and a [`Multiplicity`][mlr3pipelines::Multiplicity] of [`Predictions`][mlr3::Prediction]
-#' during prediction; this subclass is specific to the [`Learner`][mlr3::Learner] type given to `learner` during construction.
+#' [`PipeOpMultiLearner`] has one output channel named `"output"`, producing `NULL` during training
+#' and a [`Multiplicity`][mlr3pipelines::Multiplicity] of [`Predictions`][mlr3::Prediction]
+#' during prediction; this subclass is specific to the [`Learner`][mlr3::Learner] type given to
+#' `learner` during construction.
 #'
-#' The output during prediction is a [`Multiplicity`][mlr3pipelines::Multiplicity] of [`Predictions`][mlr3::Prediction] on the input data, produced by the [`Learners`][mlr3::Learner]
+#' The output during prediction is a [`Multiplicity`][mlr3pipelines::Multiplicity] of
+#' [`Predictions`][mlr3::Prediction] on the input data, produced by the [`Learners`][mlr3::Learner]
 #' trained on the training input data.
 #'
 #' @section State:
-#' The `$state` is set to the `$state` slot of the [`Learner`][mlr3::Learner] object. It is a named `list` with members:
+#' The `$state` is set to the `$state` slot of the [`Learner`][mlr3::Learner] object. It is a named
+#' `list` with members:
 #' of states for each separate `Task` provided via the incoming `Multiplicity`.\
 #' Each element contains the following slots:
 #' * `model` :: `any`\cr
@@ -190,16 +198,19 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 #'   Errors logged during training.
 #' * `train_time` :: `numeric(1)`\cr
 #'   Training time, in seconds.
-#' * `predict_log` :: `NULL` | [`data.table`] with columns `class` (`character`), `msg` (`character`)\cr
+#' * `predict_log` :: `NULL` | [`data.table`] with columns `class` (`character`),
+#'   `msg` (`character`)\cr
 #'   Errors logged during prediction.
 #' * `predict_time` :: `NULL` | `numeric(1)`
 #'   Prediction time, in seconds.
 #'
 #' @section Parameters:
-#' The parameters are exactly the parameters of the [`Learners`][mlr3::Learner] wrapped by this object.
+#' The parameters are exactly the parameters of the [`Learners`][mlr3::Learner] wrapped
+#' by this object.
 #'
 #' @section Internals:
-#' The `$state` is currently not updated by prediction, so the `$state$predict_log` and `$state$predict_time` will always be `NULL`.
+#' The `$state` is currently not updated by prediction, so the `$state$predict_log` and
+#' `$state$predict_time` will always be `NULL`.
 #'
 #' @section Methods:
 #' Methods inherited from [`PipeOp`].
@@ -217,7 +228,7 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 #'   classif = lrn("classif.rpart", cp = 0.1),
 #'   regr = lrn("regr.rpart")
 #' )
-#' lrn_po = mlr_pipeops$get("multilrn", learners)
+#' lrn_po = mlr_pipeops$get("multioutlrn", learners)
 #'
 #' # Train the graph
 #' gr = po("multioutsplit") %>>% lrn_po
@@ -244,7 +255,7 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
       id = id %??% paste0(map_chr(private$.learners, "id"), collapse = "_")
       task_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$task      # nolint
       out_type = mlr_reflections$task_types[get("type") == private$.learner$task_type][order(get("package"))][1L]$prediction # nolint
-      ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = paste0("learner_", i); x$param_set}))
+      ps = paradox::ParamSetCollection$new(imap(learners, function(x, i) {x$param_set$set_id = paste0("learner_", i); x$param_set})) # nolint
       super$initialize(id, param_vals = param_vals,
         param_set = ps,
         input = data.table(name = "input", train = "[Task]", predict = "[Task]"),
@@ -314,7 +325,7 @@ PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
         private$.learners[[x$task_type]]$state = self$state[[tn]]
         private$.learners[[x$task_type]]$predict(x)
       })
-      list(PredictionMultiOutput$new(row_ids = prds[[1]]$row_ids, predictions = prds))
+      list(PredictionMultioutput$new(row_ids = prds[[1]]$row_ids, predictions = prds))
     },
 
     .train_per_task = function(task) {

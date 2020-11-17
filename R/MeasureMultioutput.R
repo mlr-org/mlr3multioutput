@@ -1,9 +1,9 @@
-#' @title MultiOutput Measure
+#' @title Multioutput Measure
 #'
 #' @description
-#' This measure specializes [mlr3::Measure] for MultiOutput Task:
+#' This measure specializes [mlr3::Measure] for Multioutput Task:
 #'
-#' * `task_type` is set to `"multiout"`.
+#' * `task_type` is set to `"multioutput"`.
 #' * Possible values for `predict_type` are all values from `mlr_reflections$learner_predict_types`.
 #'
 #' Predefined measures can be found in the [mlr3misc::Dictionary] [mlr3::mlr_measures].
@@ -22,8 +22,9 @@
 #'
 #' @seealso
 #' Example measures:
+#' msr("multioutput.custom")
 #' @export
-MeasureMultiOutput = R6Class("MeasureMultiOutput",
+MeasureMultioutput = R6Class("MeasureMultioutput",
   inherit = Measure, cloneable = FALSE,
   public = list(
     #' @description
@@ -32,7 +33,7 @@ MeasureMultiOutput = R6Class("MeasureMultiOutput",
       predict_type = "response", task_properties = character(),
       packages = character(), man = NA_character_) {
       super$initialize(id,
-        task_type = "multiout", range = range, minimize = minimize,
+        task_type = "multioutput", range = range, minimize = minimize,
         aggregator = aggregator, properties = properties,
         predict_type = predict_type, task_properties = task_properties,
         packages = packages, man = man

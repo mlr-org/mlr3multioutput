@@ -29,7 +29,7 @@ t = tsk("linnerud")
 t
 ```
 
-    ## <TaskMultiOutput>linnerud> (20 x 6)
+    ## <TaskMultioutput>linnerud> (20 x 6)
     ## * Target: Pulls, Squats, Jumps
     ## * Properties: -
     ## * Features (4):
@@ -38,7 +38,7 @@ t
 And afterwards we can **train** and **predict**:
 
 ```r
-learner <- lrn("multiout.featureless")
+learner <- lrn("multioutput.featureless")
 learner$train(t)
 learner$predict(t)
 ```
@@ -55,14 +55,14 @@ Several design decisions are not made yet, so input is highly appreciated.
 
 | Learner | Details | Reference |
 |---|---|---|
-| [multiout.featureless]()   | A featureless learner based on ("regr." or "classif").featureless | --  |
+| [multioutput.featureless]()   | A featureless learner based on ("regr." or "classif").featureless | --  |
 
 
 | PipeOp |Details | Reference |
 |---|---|---|
-| [po("multioutsplit")]()   | Split up a MultiOutput Task in several `classif`, `regr` or `...` tasks | --  |
-| [po("multioutunite")]()   | Unite `classif`, `regr` or `...` predictions into a `PredictionMultiOutput` | --  |
-| [po("multilrn")]()        | Apply a list of per-task-type learners to a `TaskMultiOutput` | --  |
+| [po("multioutsplit")]()   | Split up a Multioutput Task in several `classif`, `regr` or `...` tasks | --  |
+| [po("multioutunite")]()   | Unite `classif`, `regr` or `...` predictions into a `PredictionMultioutput` | --  |
+| [po("multioutlrn")]()        | Apply a list of per-task-type learners to a `TaskMultioutput` | --  |
 
 
 ## Long-term Goals

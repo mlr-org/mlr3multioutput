@@ -6,27 +6,28 @@
 #'
 #' @family Prediction
 #' @export
-PredictionMultiOutput = R6Class("PredictionMultiOutput",
+PredictionMultioutput = R6Class("PredictionMultioutput",
   inherit = Prediction,
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param task ([TaskMultiOutput])\cr
+    #' @param task ([TaskMultioutput])\cr
     #'   Task, used to extract defaults for `row_ids`.
     #'
     #' @param row_ids (`integer()`)\cr
     #'   Row ids of the predicted observations, i.e. the row ids of the test set.
-    #'
     #' @param predictions (`list()`)\cr
     #'   (Named) list of per-target predictions. Used to construct the `Prediction`-object.
     #'
     #' @param check (`logical(1)`)\cr
     #'   If `TRUE`, performs argument checks and predict type conversions.
-    initialize = function(task = NULL, row_ids = task$row_ids, predictions, check = TRUE) {
+    #' @param ... (`list()`)\cr
+    #'   (Named) list of per-target truths. Only used for compatibility with `Prediction$new()`.
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions = list(), check = TRUE, ...) {
       pdata = list(row_ids = row_ids, predictions = map(predictions, as_prediction_data))
       pdata = discard(pdata, is.null)
-      class(pdata) = c("PredictionDataMultiOutput", "PredictionData")
+      class(pdata) = c("PredictionDataMultioutput", "PredictionData")
 
       if (check) {
         pdata = check_prediction_data(pdata)
@@ -36,10 +37,13 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
         assert_true(all(names(pdata$predictions) == task$target_names))
       }
 
-      self$task_type = "multiout"
-      self$man = "mlr3multioutput::PredictionMultiOutput"
+      self$task_type = "multioutput"
+      self$man = "mlr3multioutput::PredictionMultioutput"
       self$data = pdata
-      self$predict_types = intersect(unique(unlist(lapply(pdata$predictions, names))), c("response", "prob"))
+      self$predict_types = intersect(
+        unique(unlist(lapply(pdata$predictions, names))),
+        c("response", "prob")
+      )
     },
     #' @description
     #' Printer for the Prediction object.
@@ -60,8 +64,8 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' Returns scores for each measure separately.
     #'
     #' @param measures `list`\cr
-    #'   List of [`MeasureMultiOutput`] to score.
-    #' @param task [`TaskMultiOutput`]\cr
+    #'   List of [`MeasureMultioutput`] to score.
+    #' @param task [`TaskMultioutput`]\cr
     #'   Task to use for scoring
     #'
     #' @return A `numeric()` vector of scores.
@@ -96,7 +100,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
 
 
 #' @export
-as.data.table.PredictionMultiOutput = function(x, ...) { #nolint
+as.data.table.PredictionMultioutput = function(x, ...) { #nolint
   cbind(
     "row_id" = x$row_ids,
     imap_dtc(x$predictions, function(x, n) {

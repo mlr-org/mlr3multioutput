@@ -2,9 +2,11 @@
 #'
 #' @description
 #' This task specializes [mlr3::Task] for multi-output problems.
-#' The `task_type` is set to `"multiout"`.
+#' The `task_type` is set to `"multioutput"`.
 #'
 #' Predefined tasks are stored in the [dictionary][mlr3misc::Dictionary] [mlr_tasks].
+#' Properties for this [mlr3::Task] are 'multilabel' if the [mlr3::Task] has only binary
+#' classification targets and 'multioutput' else.
 #'
 #' @template param_id
 #' @template param_backend
@@ -12,10 +14,10 @@
 #'   Vector named with target names specifying the task_type for each respective target.
 #'   Will be inferred if not provided.
 #' @param task_type (`character(1)`)\cr
-#'   Task type of the constructed task. Defautls to `"multiout"`.
+#'   Task type of the constructed task. Defautls to `"multioutput"`.
 #' @family Task
 #' @export
-TaskMultiOutput = R6Class("TaskMultiOutput",
+TaskMultioutput = R6Class("TaskMultioutput",
   inherit = TaskSupervised,
   public = list(
     #' @description
@@ -25,7 +27,7 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     #' @param task_types [`character`]\cr
     #'   Named character vector of per-target task-types.
     #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
-    initialize = function(id, backend, target, task_types = NULL, task_type = "multiout") {
+    initialize = function(id, backend, target, task_types = NULL, task_type = "multioutput") {
       super$initialize(id = id, task_type = task_type, backend = backend, target = target)
       private$.update_class_property()
       self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
@@ -33,14 +35,17 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     #' @field task_types (`character()`)\cr
     #' See `initialize`.
     task_types = NULL
+    # FIXME: Add 'formula'.
   ),
   private = list(
     .update_class_property = function() {
       # Checks whether all targets are binary & classif
-      mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {test_factor(x, len = self$nrow, n.levels = 2L)}))
+      mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {
+        test_factor(x, len = self$nrow, n.levels = 2L)
+      }))
 
-      private$.properties = setdiff(private$.properties, c("multiout", "multilabel"))
-      private$.properties = union(private$.properties, if (mlbl) "multilabel" else "multiout")
+      private$.properties = setdiff(private$.properties, c("multioutput", "multilabel"))
+      private$.properties = union(private$.properties, if (mlbl) "multilabel" else "multioutput")
     }
   )
 )

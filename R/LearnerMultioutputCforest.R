@@ -1,19 +1,19 @@
-#' @title Conditional Random Forest MultiOutput Learner
+#' @title Conditional Random Forest Multioutput Learner
 #'
-#' @name mlr_learners_multiout.featureless
-#' @include LearnerMultiOutput.R
+#' @name mlr_learners_multioutput.cforest
+#' @include LearnerMultioutput.R
 #'
 #' @description
-#' A [LearnerMultiOutput] implementation of the random forest and bagging ensemble
+#' A [LearnerMultioutput] implementation of the random forest and bagging ensemble
 #' algorithms utilizing conditional inference trees as base learners.
 #' Supports multilabel classification.
 #'
-#' @templateVar id MultiOutput.cforest
+#' @templateVar id Multioutputput.cforest
 #' @template section_dictionary_learner
 #'
 #' @export
-LearnerMultiOutputCForest = R6Class("LearnerMultiOutputCForest",
-  inherit = LearnerMultiOutput,
+LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
+  inherit = LearnerMultioutput,
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -168,7 +168,7 @@ LearnerMultiOutputCForest = R6Class("LearnerMultiOutputCForest",
           )
         })
         names(p) = task$target_names
-        as_prediction(as.PredictionDataMultiOutput(p, task$task_types))
+        as_prediction(as.PredictionDataMultioutput(p, task$task_types))
       } else {
         p = map(task$target_names, function(t) {
           list(
@@ -178,7 +178,7 @@ LearnerMultiOutputCForest = R6Class("LearnerMultiOutputCForest",
           )
         })
         names(p) = task$target_names
-        as_prediction(as.PredictionDataMultiOutput(p, task$task_types))
+        as_prediction(as.PredictionDataMultioutput(p, task$task_types))
       }
     }
   )

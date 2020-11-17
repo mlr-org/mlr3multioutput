@@ -2,16 +2,16 @@
 % Please edit documentation in R/PipeOps.R
 \name{mlr_pipeops_multioutunite}
 \alias{mlr_pipeops_multioutunite}
-\alias{PipeOpPredictionMultiOutUnite}
-\title{PipeOpPredictionMultiOutUnite}
+\alias{PipeOpPredictionMultioutUnite}
+\title{PipeOpPredictionMultioutUnite}
 \format{
 \code{\link{R6Class}} inheriting from \code{\link{PipeOpEnsemble}}/\code{\link{PipeOp}}.
 }
 \description{
-Unite a set of "classif", "regr"' \code{\link[mlr3:Prediction]{Predictions}} into a \code{\link{PredictionMultiOutput}}.
-
-This \code{\link{PipeOp}} uses a \code{\link{Multiplicity}} input, which is created by \code{\link{PipeOpMultiplicityImply}} or other
-\code{\link{PipeOp}}s that implicate a \code{\link{Multiplicity}}.
+Unite a set of "classif", "regr"' \code{\link[mlr3:Prediction]{Predictions}} into a
+\code{\link{PredictionMultioutput}}.
+This \code{\link{PipeOp}} uses a \code{\link{Multiplicity}} input, which is created by \code{\link{PipeOpMultiplicityImply}}
+or other \code{\link{PipeOp}}s that implicate a \code{\link{Multiplicity}}.
 
 Note that \code{\link{Multiplicity}} is currently an experimental feature and the implementation or UI
 may change.
@@ -52,15 +52,15 @@ Only methods inherited from \code{\link{PipeOpEnsemble}}/\code{\link{PipeOp}}.
 
 \seealso{
 Other PipeOps: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutsplit}}
 
 Other Multiplicity PipeOps: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutsplit}}
 
 Other Experimental Features: 
-\code{\link{mlr_pipeops_multilrn}},
+\code{\link{mlr_pipeops_multioutlrn}},
 \code{\link{mlr_pipeops_multioutsplit}}
 }
 \concept{Ensembles}
@@ -68,13 +68,13 @@ Other Experimental Features:
 \concept{Multiplicity PipeOps}
 \concept{PipeOps}
 \section{Super classes}{
-\code{\link[mlr3pipelines:PipeOp]{mlr3pipelines::PipeOp}} -> \code{\link[mlr3pipelines:PipeOpEnsemble]{mlr3pipelines::PipeOpEnsemble}} -> \code{PipeOpPredictionMultiOutUnite}
+\code{\link[mlr3pipelines:PipeOp]{mlr3pipelines::PipeOp}} -> \code{\link[mlr3pipelines:PipeOpEnsemble]{mlr3pipelines::PipeOpEnsemble}} -> \code{PipeOpPredictionMultioutUnite}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PipeOpPredictionMultiOutUnite$new()}}
-\item \href{#method-clone}{\code{PipeOpPredictionMultiOutUnite$clone()}}
+\item \href{#method-new}{\code{PipeOpPredictionMultioutUnite$new()}}
+\item \href{#method-clone}{\code{PipeOpPredictionMultioutUnite$clone()}}
 }
 }
 \if{html}{
@@ -92,7 +92,7 @@ Other Experimental Features:
 \subsection{Method \code{new()}}{
 Initialize a new R6 class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PipeOpPredictionMultiOutUnite$new(id = "multioutunite", param_vals = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PipeOpPredictionMultioutUnite$new(id = "multioutunite", param_vals = list())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -102,7 +102,8 @@ Initialize a new R6 class.
 Identifier of the resulting  object, defaults to "multioutunite".}
 
 \item{\code{param_vals}}{named \code{list}\cr
-List of hyperparameter settings, overwriting the hyperparameter settings that would otherwise be set during construction. Default \code{list()}.}
+List of hyperparameter settings, overwriting the hyperparameter settings that would
+otherwise be set during construction. Default \code{list()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -113,7 +114,7 @@ List of hyperparameter settings, overwriting the hyperparameter settings that wo
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PipeOpPredictionMultiOutUnite$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PipeOpPredictionMultioutUnite$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

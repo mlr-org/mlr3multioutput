@@ -46,7 +46,7 @@ t
 
 
 ```{r}
-l = lrn("multiout.featureless")
+l = lrn("multioutput.featureless")
 l
 ```
 
@@ -73,7 +73,7 @@ Current limitations:
 
 ```{r}
 m1 = msr(
-  "multiout.custom",
+  "multioutput.custom",
   measures = list("regr" = msr("regr.mse")),
   weights =  c(Pulls = 1, Squats = 0.3, Jumps = 2)
 )
@@ -84,24 +84,27 @@ m1
 p$score(m1)
 ```
 
+FIXME: Add one measure, where a user can define the aggregation function.
+
+
 ## with mlr3pipelines
 
-- `po("splitmultiout")`: Splits a `TaskMultiOutput` into one `Task` for each target.
+- `po("splitmultiout")`: Splits a `TaskMultioutput` into one `Task` for each target.
 
 ```{r}
 po("multioutsplit")$train(list(t))
 ```
 
-- `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultiOutput`.
+- `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultioutput`.
 
 ```{r}
 po("multioutunite") # See example below.
 ```
 
-- `po("multilrn")`: Applies one or several `Learner`s for each Task in a `Multiplicity`.
+- `po("multioutlrn")`: Applies one or several `Learner`s for each Task in a `Multiplicity`.
 
 ```{r}
-po("multilrn", learners = list(lrn("regr.rpart"), lrn("classif.rpart")))
+po("multioutlrn", learners = list(lrn("regr.rpart"), lrn("classif.rpart")))
 ```
 
 ### Approach 1: Multiplicity (same learner for all targets)
@@ -122,7 +125,7 @@ gr$predict(t)
 
 ```{r}
 gr = po("multioutsplit") %>>%
- po("multilrn", learners = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
+ po("multioutlrn", learners = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
 
 gl = GraphLearner$new(gr)
 gl$train(t)
@@ -164,7 +167,7 @@ prds
 
 ```{r, eval = FALSE}
 library(mlr3keras)
-lrn("multiout.kerasff")
+lrn("multioutput.kerasff")
 ```
 
 
@@ -191,7 +194,7 @@ ps = ParamSet$new(
 
 cv3 = rsmp("cv", folds = 3)
 
-ms = MeasureMultiOutputWeightedAvg$new(measures = list(
+ms = MeasureMultioutputWeightedAvg$new(measures = list(
   "regr" = msr("regr.mse")
 ))
 
