@@ -10,21 +10,20 @@
 register_mlr3 = function() {
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
 
-  if (!grepl("multiout", x$task_types[, "type"])) {
+  if (!grepl("multioutput", x$task_types[, "type"])) {
     x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
     x$task_types = setkeyv(rbind(x$task_types, rowwise_table(
       ~type, ~package, ~task, ~learner, ~prediction, ~measure,
-      "multiout", "mlr3multioutput", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
+      "multioutput", "mlr3multioutput", "TaskMultiOutput", "LearnerMultiOutput", "PredictionMultiOutput", "MeasureMultiOutput"
     )), "type")
-    x$task_col_roles$multiout = c(unique(unlist(x$task_col_roles)), c("target_regr", "target_classif"))
-    x$task_properties$multiout = c(x$task_properties$regr, "multilabel")
-    x$measure_properties$multiout = c(x$measure_properties$regr, "multilabel")
-    x$default_measures$multiout = "multiout.default"
+    x$task_col_roles$multioutput = c(unique(unlist(x$task_col_roles)), c("target_regr", "target_classif"))
+    x$task_properties$multioutput = c(x$task_properties$regr, "multilabel")
+    x$measure_properties$multioutput = c(x$measure_properties$regr, "multilabel")
 
     # predict_types are predict_types of all other task types.
     prd_types = do.call("c", unname(x$learner_predict_types))
-    x$learner_predict_types$multiout = prd_types[!duplicated(prd_types)]
-    x$learner_properties$multiout = c(unique(unlist(x$learner_properties)), "multilabel")
+    x$learner_predict_types$multioutput = prd_types[!duplicated(prd_types)]
+    x$learner_properties$multioutput = c(unique(unlist(x$learner_properties)), "multilabel")
     x$task_target_types = rowwise_table(
       ~type, ~task_type,
       "factor", "classif",
@@ -39,15 +38,18 @@ register_mlr3 = function() {
   x$add("flags", load_task_flags)
 
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
-  x$add("multiout.featureless", LearnerMultiOutputFeatureless)
+  x$add("multioutput.featureless", LearnerMultiOutputFeatureless)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
-  defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multiout"))], msr)
-  x$add("multiout.default",
+  defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multioutput"))], msr)
+  x$add("multioutput.default",
     MeasureMultiOutputWeightedAvg$new("default", defs),
     name = paste0("multiobj", map_chr(defs, "id"), sep = "_")
   )
-  x$add("multiout.custom", MeasureMultiOutputWeightedAvg, measures = defs)
+  x$add("multioutput.custom", MeasureMultiOutputWeightedAvg, measures = defs)
+
+  x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
+  x$default_measures$multioutput = "multioutput.default"
 }
 
 register_mlr3pipelines = function() {
@@ -55,7 +57,7 @@ register_mlr3pipelines = function() {
 
   x$add("multioutsplit", PipeOpSplitMultiout)
   x$add("multioutunite", PipeOpPredictionMultiOutUnite)
-  x$add("multilrn", PipeOpMultiLearner)
+  x$add("multioutlrn", PipeOpMultiLearner)
 }
 
 .onLoad = function(libname, pkgname) { # nolint

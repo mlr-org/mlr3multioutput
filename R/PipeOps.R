@@ -162,7 +162,7 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 #' @title PipeOpMultiLearner
 #'
 #' @usage NULL
-#' @name mlr_pipeops_multilrn
+#' @name mlr_pipeops_multioutlrn
 #' @format [`R6Class`] object inheriting from [`PipeOp`].
 #'
 #' @description
@@ -217,7 +217,7 @@ PipeOpPredictionMultiOutUnite = R6Class("PipeOpPredictionMultiOutUnite",
 #'   classif = lrn("classif.rpart", cp = 0.1),
 #'   regr = lrn("regr.rpart")
 #' )
-#' lrn_po = mlr_pipeops$get("multilrn", learners)
+#' lrn_po = mlr_pipeops$get("multioutlrn", learners)
 #'
 #' # Train the graph
 #' gr = po("multioutsplit") %>>% lrn_po

@@ -14,7 +14,7 @@ test_that("Featureless task", {
   expect_backend(b)
   expect_task(task)
   expect_data_table(task$data(), ncols = 2L)
-  l = lrn("multiout.featureless")
+  l = lrn("multioutput.featureless")
   p = l$train(task)$predict(task)
   expect_prediction(p)
 })

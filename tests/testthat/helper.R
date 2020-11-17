@@ -26,7 +26,7 @@ registerS3method("generate_tasks", "LearnerMultiOutput", generate_tasks.LearnerM
 )
 
 sanity_check.PredictionMultiOutput = function(prediction, task, ...) { # nolint
-  prediction$score(measures = msr("multiout.default"), task = task) > 0
+  prediction$score(measures = msr("multioutput.default"), task = task) > 0
 }
 
 registerS3method("sanity_check", "PredictionMultiOutput", sanity_check.PredictionMultiOutput,
@@ -34,7 +34,7 @@ registerS3method("sanity_check", "PredictionMultiOutput", sanity_check.Predictio
 )
 
 
-expect_prediction_multiout = function(p) {
+expect_prediction_multioutput = function(p) {
   expect_prediction(p)
   checkmate::expect_r6(p, "PredictionMultiOutput",
     public = c("row_ids", "truth", "predict_types")

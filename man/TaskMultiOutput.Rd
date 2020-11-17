@@ -5,7 +5,7 @@
 \title{Multioutput Task}
 \description{
 This task specializes \link[mlr3:Task]{mlr3::Task} for multi-output problems.
-The \code{task_type} is set to \code{"multiout"}.
+The \code{task_type} is set to \code{"multioutput"}.
 
 Predefined tasks are stored in the \link[mlr3misc:Dictionary]{dictionary} \link{mlr_tasks}.
 }
@@ -62,7 +62,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
   backend,
   target,
   task_types = NULL,
-  task_type = "multiout"
+  task_type = "multioutput"
 )}\if{html}{\out{</div>}}
 }
 
@@ -84,7 +84,7 @@ Named character vector of per-target task-types.
 E.g. c(tgt1 = "regr", tgt2 = "classif")}
 
 \item{\code{task_type}}{(\code{character(1)})\cr
-Task type of the constructed task. Defautls to \code{"multiout"}.}
+Task type of the constructed task. Defautls to \code{"multioutput"}.}
 }
 \if{html}{\out{</div>}}
 }

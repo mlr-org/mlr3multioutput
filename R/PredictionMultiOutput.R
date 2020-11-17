@@ -26,7 +26,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     initialize = function(task = NULL, row_ids = task$row_ids, predictions, check = TRUE) {
       pdata = list(row_ids = row_ids, predictions = map(predictions, as_prediction_data))
       pdata = discard(pdata, is.null)
-      class(pdata) = c("PredictionDataMultiOutput", "PredictionData")
+      class(pdata) = c("PredictionDataMultioutput", "PredictionData")
 
       if (check) {
         pdata = check_prediction_data(pdata)
@@ -36,7 +36,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
         assert_true(all(names(pdata$predictions) == task$target_names))
       }
 
-      self$task_type = "multiout"
+      self$task_type = "multioutput"
       self$man = "mlr3multioutput::PredictionMultiOutput"
       self$data = pdata
       self$predict_types = intersect(unique(unlist(lapply(pdata$predictions, names))), c("response", "prob"))

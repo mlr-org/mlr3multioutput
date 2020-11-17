@@ -34,7 +34,7 @@ LearnerMultiOutput = R6Class("LearnerMultiOutput",
       feature_types = character(), properties = character(),
       packages = character()) {
       super$initialize(
-        id = id, task_type = "multiout", param_set = param_set,
+        id = id, task_type = "multioutput", param_set = param_set,
         predict_types = predict_types,
         feature_types = feature_types, properties = properties, packages = packages
       )

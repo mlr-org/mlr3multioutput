@@ -19,7 +19,7 @@ test_that("PipeOpSplitMultiout for linnerud", {
 })
 
 test_that("PipeOpTargetSplit for generated task", {
-  task = generate_tasks(lrn("multiout.featureless"))[[1]]
+  task = generate_tasks(lrn("multioutput.featureless"))[[1]]
   p = PipeOpSplitMultiout$new()
 
   ot = p$train(list(task))

@@ -6,7 +6,7 @@
 \description{
 This measure specializes \link[mlr3:Measure]{mlr3::Measure} for MultiOutput Task:
 \itemize{
-\item \code{task_type} is set to \code{"multiout"}.
+\item \code{task_type} is set to \code{"multioutput"}.
 \item Possible values for \code{predict_type} are all values from \code{mlr_reflections$learner_predict_types}.
 }
 

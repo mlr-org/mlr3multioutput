@@ -1,6 +1,6 @@
 #' @title Featureless MultiOutput Learner
 #'
-#' @name mlr_learners_multiout.featureless
+#' @name mlr_learners_multioutput.featureless
 #' @include LearnerMultiOutput.R
 #'
 #' @description
@@ -19,7 +19,7 @@ LearnerMultiOutputFeatureless = R6Class("LearnerMultiOutputFeatureless",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
       super$initialize(
-        id = "multiout.featureless",
+        id = "multioutput.featureless",
         feature_types = mlr_reflections$task_feature_types,
         predict_types = "response",
         param_set = ParamSet$new(),
@@ -35,7 +35,7 @@ LearnerMultiOutputFeatureless = R6Class("LearnerMultiOutputFeatureless",
       mods = imap(task$task_types, function(type, tn) {
         lrn(paste0(type, ".featureless"))$train(tsks[[tn]])
       })
-      set_class(list(models = mods, features = task$feature_names), "multiout.featureless_model")
+      set_class(list(models = mods, features = task$feature_names), "multioutput.featureless_model")
     },
     .predict = function(task) {
       # Predict per-target, aggregate into PredictionMultiOutput
