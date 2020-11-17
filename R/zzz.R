@@ -23,8 +23,8 @@ register_mlr3 = function() {
 
     # predict_types are predict_types of all other task types.
     prd_types = do.call("c", unname(x$learner_predict_types))
-    x$learner_predict_types$multiout = c(prd_types[!duplicated(prd_types)], "multilabel")
-    x$learner_properties$multiout = unique(unlist(x$learner_properties))
+    x$learner_predict_types$multiout = prd_types[!duplicated(prd_types)]
+    x$learner_properties$multiout = c(unique(unlist(x$learner_properties)), "multilabel")
     x$task_target_types = rowwise_table(
       ~type, ~task_type,
       "factor", "classif",
