@@ -8,6 +8,8 @@ This task specializes \link[mlr3:Task]{mlr3::Task} for multi-output problems.
 The \code{task_type} is set to \code{"multioutput"}.
 
 Predefined tasks are stored in the \link[mlr3misc:Dictionary]{dictionary} \link{mlr_tasks}.
+Properties for this \link[mlr3:Task]{mlr3::Task} are 'multilabel' if the \link[mlr3:Task]{mlr3::Task} has only binary
+classification targets and 'multioutput' else.
 }
 \concept{Task}
 \section{Super classes}{

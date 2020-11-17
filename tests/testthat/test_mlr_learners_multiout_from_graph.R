@@ -29,11 +29,11 @@ test_that("graph with sme-target-type approach", {
     po("multioutunite")
   gr$train(task)
   prds = gr$predict(task)
-  expect_prediction_multiout(prds)
+  expect_prediction_multioutput(prds)
 
   gl = GraphLearner$new(gr)
   expect_learner(gl, task = task)
   gl$train(task)
   prds = gl$predict(task)
-  expect_prediction_multiout(prds)
+  expect_prediction_multioutput(prds)
 })

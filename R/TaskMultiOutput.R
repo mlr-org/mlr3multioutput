@@ -5,6 +5,8 @@
 #' The `task_type` is set to `"multioutput"`.
 #'
 #' Predefined tasks are stored in the [dictionary][mlr3misc::Dictionary] [mlr_tasks].
+#' Properties for this [mlr3::Task] are 'multilabel' if the [mlr3::Task] has only binary
+#' classification targets and 'multioutput' else.
 #'
 #' @template param_id
 #' @template param_backend

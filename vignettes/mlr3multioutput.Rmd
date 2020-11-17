@@ -84,6 +84,9 @@ m1
 p$score(m1)
 ```
 
+FIXME: Add one measure, where a user can define the aggregation function.
+
+
 ## with mlr3pipelines
 
 - `po("splitmultiout")`: Splits a `TaskMultiOutput` into one `Task` for each target.
