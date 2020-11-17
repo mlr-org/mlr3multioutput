@@ -172,7 +172,6 @@ lrn("multiout.kerasff")
 
 ```{r, eval = FALSE}
 library(mlr3)
-library(mlr3multioutput)
 library(mlr3pipelines)
 library(mlr3tuning)
 library(paradox)
@@ -185,21 +184,23 @@ grl = GraphLearner$new(gr)
 
 ps = ParamSet$new(
   list(
-    ParamInt$new("regr.rpart.minsplit", lower = 1, upper = 100),
-    ParamInt$new("regr.rpart.maxdepth", lower = 1, upper = 30)
+    ParamInt$new("regr.rpart.minsplit", lower = 1, upper = 10),
+    ParamInt$new("regr.rpart.maxdepth", lower = 1, upper = 3)
   )
 )
 
 cv3 = rsmp("cv", folds = 3)
 
-ms = MeasureMultiOutputWeightedAvg$new(measures = list(mse = msr("regr.mse")))
+ms = MeasureMultiOutputWeightedAvg$new(measures = list(
+  "regr" = msr("regr.mse")
+))
 
 auto = AutoTuner$new(
   learner = grl,
   resampling = cv3,
   measure = ms,
   search_space = ps,
-  terminator = trm("evals", n_evals = 20),
+  terminator = trm("evals", n_evals = 5),
   tuner = tnr("random_search")
 )
 
