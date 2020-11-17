@@ -83,7 +83,7 @@ PredictionMultiOutput = R6Class("PredictionMultiOutput",
     #' @field missing (`integer()`)\cr
     #' Returns `row_ids` for which the predictions are missing or incomplete.
     missing = function() {
-      unique(unlist(map(self$data$predictions, "missing")))
+      unique(unlist(map(self$data$predictions, is_missing_prediction_data)))
     },
     #' @field row_ids (`integer()`)\cr
     #' Access the stored row_ids.
