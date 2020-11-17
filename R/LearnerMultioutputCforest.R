@@ -142,7 +142,7 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
       }
 
       mlr3misc::invoke(partykit::cforest,
-        formula = as.formula(sprintf("%s ~ %s", paste0(task$target_names, collapse = " + "), paste0(task$feature_names, collapse = " + "))), #FIXME: use task$formula() after multi target implementation in mlr3misc
+        formula = task$formula(),
         data = task$data(),
         weights = task$weights$weight, # weights are handled here
         # FIXME: strata handling

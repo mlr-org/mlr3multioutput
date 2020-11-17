@@ -34,8 +34,11 @@ TaskMultioutput = R6Class("TaskMultioutput",
     },
     #' @field task_types (`character()`)\cr
     #' See `initialize`.
-    task_types = NULL
+    task_types = NULL,
     # FIXME: Add 'formula'.
+    formula = function(rhs = ".") {
+      as.formula(sprintf("%s ~ %s", paste0(self$target_names, collapse = " + "), paste0(rhs, collapse = " + ")))
+    }
   ),
   private = list(
     .update_class_property = function() {

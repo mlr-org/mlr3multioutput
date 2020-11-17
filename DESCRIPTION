@@ -41,10 +41,10 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.1.1
 Collate:
-    'LearnerMultiOutputKeras.R'
     'LearnerMultioutput.R'
     'LearnerMultioutputCforest.R'
     'LearnerMultioutputFeatureless.R'
+    'LearnerMultioutputKeras.R'
     'MeasureMultioutput.R'
     'MeasureMultioutputCustomAggr.R'
     'MeasureMultioutputExactMatchingRatio.R'
