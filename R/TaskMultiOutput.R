@@ -27,7 +27,7 @@ TaskMultiOutput = R6Class("TaskMultiOutput",
     #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
     initialize = function(id, backend, target, task_types = NULL, task_type = "multiout") {
       super$initialize(id = id, task_type = task_type, backend = backend, target = target)
-      self$.update_class_property()
+      private$.update_class_property()
       self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
     },
     #' @field task_types (`character()`)\cr
