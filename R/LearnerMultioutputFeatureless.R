@@ -23,7 +23,7 @@ LearnerMultioutputFeatureless = R6Class("LearnerMultioutputFeatureless",
         feature_types = mlr_reflections$task_feature_types,
         predict_types = "response",
         param_set = ParamSet$new(),
-        properties = c("missings", "twoclass", "multiclass")
+        properties = c("missings", "twoclass", "multiclass", "multilabel", "multioutput")
       )
     }
   ),

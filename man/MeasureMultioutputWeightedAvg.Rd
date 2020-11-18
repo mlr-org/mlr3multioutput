@@ -62,7 +62,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MeasureMultioutputWeightedAvg$new(
   name = "weightedavg",
-  measures,
+  measures = get_default_measures(),
   weights = NULL
 )}\if{html}{\out{</div>}}
 }

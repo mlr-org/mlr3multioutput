@@ -111,7 +111,7 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
       ps$values$saveinfo = FALSE
 
       super$initialize(
-        id = "multiout.cforest",
+        id = "multioutput.cforest",
         feature_types = mlr_reflections$task_feature_types,
         predict_types = c("response", "prob"),
         param_set = ParamSet$new(),

@@ -48,8 +48,8 @@ register_mlr3 = function() { # nolint
     MeasureMultioutputWeightedAvg$new("default", defs),
     name = paste0("multiobj", map_chr(defs, "id"), sep = "_")
   )
-  x$add("multioutput.custom", MeasureMultioutputWeightedAvg, measures = defs)
-
+  x$add("multioutput.custom", MeasureMultioutputWeightedAvg)
+  x$add("multioutput.customaggr", MeasureMultioutputCustomAggr)
   x = utils::getFromNamespace("mlr_reflections", ns = "mlr3")
   x$default_measures$multioutput = "multioutput.default"
 }

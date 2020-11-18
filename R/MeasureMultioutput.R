@@ -23,6 +23,7 @@
 #' @seealso
 #' Example measures:
 #' msr("multioutput.custom")
+#' msr("multioutput.customaggr")
 #' @export
 MeasureMultioutput = R6Class("MeasureMultioutput",
   inherit = Measure, cloneable = FALSE,
@@ -41,3 +42,7 @@ MeasureMultioutput = R6Class("MeasureMultioutput",
     }
   )
 )
+
+get_default_measures = function() {
+  map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multioutput"))], msr)
+}

@@ -62,8 +62,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MeasureMultioutputCustomAggr$new(
   name = "custom_aggregation",
-  measures,
-  aggfun = min
+  measures = get_default_measures(),
+  aggfun = min,
+  range = c(-Inf, Inf)
 )}\if{html}{\out{</div>}}
 }
 

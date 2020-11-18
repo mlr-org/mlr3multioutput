@@ -27,12 +27,12 @@ MeasureMultioutputCustomAggr = R6Class("MeasureMultioutputCustomAggr",
     #' @template param_measure_multioutput_weightedavg
     #'
     #' @return A [`MeasureMultioutput`]
-    initialize = function(name = "custom_aggregation", measures, aggfun = min) {
+    initialize = function(name = "custom_aggregation", measures = get_default_measures(), aggfun = min, range = c(-Inf, Inf)) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
       self$aggfun = assert_function(aggfun)
       super$initialize(
         id = paste0("multioutput.", name),
-        range = c(-Inf, Inf),
+        range = range,
         minimize = TRUE,
         predict_type = assert_string(unique(map_chr(measures, "predict_type"))),
         packages = assert_character(unique(map_chr(measures, "packages"))),
