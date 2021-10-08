@@ -63,6 +63,5 @@ Collate:
     'TaskMultioutput_linnerud.R'
     'helpers.R'
     'task_converters.R'
-    'text_embedding.R'
     'zzz.R'
 VignetteBuilder: knitr
