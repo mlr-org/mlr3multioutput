@@ -26,15 +26,18 @@ Imports:
     mlr3misc (>= 0.4.0),
     mlr3pipelines,
     paradox,
-    R6
+    R6,
+    Hmisc
 Suggests:
     mlr3keras,
+    reticulate,
     mlbench,
     plsdepot,
     mldr.datasets,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    rpart
 Remotes:
     mlr-org/mlr3
 Encoding: UTF-8
@@ -45,6 +48,9 @@ Collate:
     'LearnerMultioutputCforest.R'
     'LearnerMultioutputFeatureless.R'
     'LearnerMultioutputKeras.R'
+    'LearnerMultioutputKerasCNN.R'
+    'LearnerMultioutputKerasCNNWordError.R'
+    'LearnerMultioutputKerasFF.R'
     'MeasureMultioutput.R'
     'MeasureMultioutputCustomAggr.R'
     'MeasureMultioutputExactMatchingRatio.R'
@@ -55,6 +61,8 @@ Collate:
     'TaskMultioutput.R'
     'TaskMultioutput_flags.R'
     'TaskMultioutput_linnerud.R'
+    'helpers.R'
     'task_converters.R'
+    'text_embedding.R'
     'zzz.R'
 VignetteBuilder: knitr

@@ -23,3 +23,15 @@ load_task_flags = function(id = "flags") {
   b$hash = task$man = "mlr3multioutput::mlr_tasks_flags"
   task
 }
+
+load_task_flags_text = function(id = "flags_text") {
+  d = remove_named(load_dataset("flags", "mldr.datasets")$dataset, c(".labelcount", ".SCUMBLE"))
+  d[, sapply(d, is.character)] = as.data.frame(lapply(d[, sapply(d, is.character)], as.factor))
+  colors = c("red", "green", "blue", "yellow", "white", "black", "orange")
+  d = pivot_longer(d, cols = colors, names_to = "colors", values_to = "color_present")
+  target = c("crescent", "triangle", "icon", "text")
+  b = as_data_backend(d)
+  task = TaskMultioutput$new(id, b, target = target)
+  b$hash = task$man = "mlr3multioutput::mlr_tasks_flags_text"
+  task
+}

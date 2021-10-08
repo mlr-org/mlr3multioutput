@@ -1,4 +1,4 @@
-context("mlr_learners_multiout_featureless")
+context("mlr_learners_multioutput_featureless")
 
 test_that("autotest", {
   learner = lrn("multioutput.featureless")

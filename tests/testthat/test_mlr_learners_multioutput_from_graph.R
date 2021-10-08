@@ -1,8 +1,8 @@
-context("mlr_learners_multiout_graphs")
+context("mlr_learners_multioutput_graphs")
 
 test_that("graph with list of prd output", {
   task = tsk("linnerud")
-  gr = po("multioutsplit") %>>%
+  gr = po("multioutputsplit") %>>%
     po("multiplicityexply", outnum = 3) %>>%
     gunion(list(
       Pulls = lrn("regr.rpart", id = "rp1"),
@@ -10,7 +10,7 @@ test_that("graph with list of prd output", {
       Jumps = lrn("regr.rpart", id = "rp3")
    )) %>>%
    po("multiplicityimply", innum = task$target_names) %>>%
-   po("multioutunite")
+   po("multioutputunite")
   gr$train(task)
   prds = gr$predict(task)
   expect_prediction_multioutput(prds[[1]])
@@ -24,9 +24,9 @@ test_that("graph with list of prd output", {
 
 test_that("graph with sme-target-type approach", {
   task = tsk("linnerud")
-  gr = po("multioutsplit") %>>%
+  gr = po("multioutputsplit") %>>%
     lrn("regr.rpart") %>>%
-    po("multioutunite")
+    po("multioutputunite")
   gr$train(task)
   prds = gr$predict(task)
   expect_prediction_multioutput(prds[[1]])

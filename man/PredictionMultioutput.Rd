@@ -37,6 +37,7 @@ Access the stored row_ids.}
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="filter">}\href{../../mlr3/html/Prediction.html#method-filter}{\code{mlr3::Prediction$filter()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="format">}\href{../../mlr3/html/Prediction.html#method-format}{\code{mlr3::Prediction$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="help">}\href{../../mlr3/html/Prediction.html#method-help}{\code{mlr3::Prediction$help()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Prediction" data-id="score">}\href{../../mlr3/html/Prediction.html#method-score}{\code{mlr3::Prediction$score()}}\out{</span>}
@@ -53,7 +54,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
   task = NULL,
   row_ids = task$row_ids,
   predictions = list(),
-  check = TRUE,
+  check = FALSE,
   ...
 )}\if{html}{\out{</div>}}
 }

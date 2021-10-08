@@ -41,6 +41,9 @@ register_mlr3 = function() { # nolint
   x$add("multioutput.featureless", LearnerMultioutputFeatureless)
   x$add("multioutput.cforest", LearnerMultioutputCForest)
   x$add("multioutput.keras", LearnerMultioutputKeras)
+  x$add("multioutput.kerasff", LearnerMultioutputKerasFF)
+  x$add("multioutput.kerascnn", LearnerMultioutputKerasCNN)
+  x$add("multioutput.kerascnnworderror", LearnerMultioutputKerasCNNWordError)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multioutput"))], msr)
@@ -57,12 +60,14 @@ register_mlr3 = function() { # nolint
 register_mlr3pipelines = function() {
   x = utils::getFromNamespace("mlr_pipeops", ns = "mlr3pipelines")
 
-  x$add("multioutsplit", PipeOpSplitMultiout)
-  x$add("multioutunite", PipeOpPredictionMultioutUnite)
-  x$add("multioutlrn", PipeOpMultiLearner)
+  x$add("multioutputsplit", PipeOpSplitMultioutput)
+  x$add("multioutputunite", PipeOpPredictionMultioutputUnite)
+  x$add("multioutputlrn", PipeOpMultioutputLearner)
 }
 
 .onLoad = function(libname, pkgname) { # nolint
+  # reticulate::configure_environment(pkgname)
+  # suppressMessages(try(keras::use_implementation("tensorflow"), silent = TRUE))
   # nocov start
   register_mlr3()
   if (requireNamespace("mlr3pipelines", quietly = TRUE)) {
@@ -89,3 +94,6 @@ register_mlr3pipelines = function() {
 
   library.dynam.unload("mlr3multioutput", libpath)
 } # nocov end
+
+# silence R CMD check for callbacks:
+utils::globalVariables("model") # nocov end

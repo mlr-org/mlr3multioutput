@@ -24,11 +24,10 @@ PredictionMultioutput = R6Class("PredictionMultioutput",
     #'   If `TRUE`, performs argument checks and predict type conversions.
     #' @param ... (`list()`)\cr
     #'   (Named) list of per-target truths. Only used for compatibility with `Prediction$new()`.
-    initialize = function(task = NULL, row_ids = task$row_ids, predictions = list(), check = TRUE, ...) {
+    initialize = function(task = NULL, row_ids = task$row_ids, predictions = list(), check = FALSE, ...) {
       pdata = list(row_ids = row_ids, predictions = map(predictions, as_prediction_data))
       pdata = discard(pdata, is.null)
       class(pdata) = c("PredictionDataMultioutput", "PredictionData")
-
       if (check) {
         pdata = check_prediction_data(pdata)
       }
@@ -102,8 +101,8 @@ PredictionMultioutput = R6Class("PredictionMultioutput",
 #' @export
 as.data.table.PredictionMultioutput = function(x, ...) { #nolint
   cbind(
-    "row_id" = x$row_ids,
+    "row_ids" = x$row_ids,
     imap_dtc(x$predictions, function(x, n) {
-      dt = as.data.table(x)[, row_id := NULL]
+      dt = as.data.table(x)[, row_ids := NULL]
   }))
 }

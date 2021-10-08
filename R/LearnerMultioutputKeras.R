@@ -1,14 +1,14 @@
 #' @title Keras Neural Network with custom architecture (Multilabel)
 #'
 #' @usage NULL
-#' @aliases mlr_learners_multiout.keras
+#' @aliases mlr_learners_multioutput.keras
 #' @format [R6::R6Class()] inheriting from [mlr3::LearnerMultioutput].
 #'
 #' @section Construction:
 #' ```
 #' LearnerMultioutputKeras$new()
-#' mlr3::mlr_learners$get("multiout.keras")
-#' mlr3::lrn("multiout.keras")
+#' mlr3::mlr_learners$get("multioutput.keras")
+#' mlr3::lrn("multioutput.keras")
 #' ```
 #'
 #' @description
@@ -32,7 +32,7 @@
 #'
 #' @template learner_methods
 #' @template seealso_learner
-#' @templateVar learner_name multiout.keras
+#' @templateVar learner_name multioutput.keras
 #' @examples
 #'  # Define a model
 #'  library(keras)
@@ -52,13 +52,13 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
   public = list(
     architecture = NULL,
     initialize = function(
-        id = "multiout.keras",
+        id = "multioutput.keras",
         predict_types = c("response", "prob"),
         feature_types = c("integer", "numeric"),
         properties = c("multilabel"),
         packages = "keras",
-        man = "mlr3keras::mlr_learners_classif.keras",
-        architecture = KerasArchitectureCustomModel$new()
+        # man = "mlr3keras::mlr_learners_classif.keras",
+        architecture = mlr3keras::KerasArchitectureCustomModel$new()
       ) {
       self$architecture = assert_class(architecture, "KerasArchitecture")
       ps = ParamSet$new(list(
@@ -68,7 +68,7 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
         ParamDbl$new("validation_split", lower = 0, upper = 1, default = 1/3, tags = "train"),
         ParamInt$new("batch_size", default = 128L, lower = 1L, tags = c("train", "predict", "predict_fun")),
         ParamUty$new("callbacks", default = list(), tags = "train"),
-        ParamLgl$new("low_memory", default=FALSE, tags = "train"),
+        ParamLgl$new("low_memory", default = FALSE, tags = "train"),
         ParamInt$new("verbose", lower = 0L, upper = 1L, tags = c("train", "predict", "predict_fun"))
       ))
       ps$values = list(epochs = 100L, callbacks = list(), validation_split = 1/3, batch_size = 128L, low_memory = FALSE, verbose=0L)
@@ -79,14 +79,14 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
         predict_types = assert_character(predict_types),
         feature_types = assert_character(feature_types),
         properties = assert_character(properties),
-        packages = assert_character(packages),
-        man = assert_character(man)
+        packages = assert_character(packages)#,
+        # man = assert_character(man)
       )
 
       # Set y_transform: use to_categorical.
       self$architecture$set_transform("y",
         function(target, pars) {
-          y = to_categorical(as.integer(target) - 1)
+          y = as.matrix(map_dtc(target, function(x) as.integer(x) - 1))
           return(y)
         }
       )
@@ -115,15 +115,12 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
   private = list(
     .train = function(task) {
       pars = self$param_set$get_values(tags = "train")
-
       # Construct / Get the model depending on task and hyperparams.
       model = self$architecture$get_model(task, pars)
-
       # Custom transformation depending on the model.
       # Could be generalized at some point.
       features = task$data(cols = task$feature_names)
-      target = task$data(cols = task$target_names)[[task$target_names]]
-
+      target = task$data(cols = task$target_names)
       # Either fit directly on data or create a generator and fit from there
       if (!pars$low_memory) {
         x = self$architecture$transforms$x(features, pars)
@@ -143,7 +140,7 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
         generators = make_train_valid_generators(
           task = task,
           x_transform = function(features) self$architecture$transforms$x(features, pars = pars),
-          y_transform = function(target) self$architecture$transforms$y(target,   pars = pars),
+          y_transform = function(target) self$architecture$transforms$y(target, pars = pars),
           validation_split = pars$validation_split,
           batch_size = pars$batch_size)
 
@@ -168,37 +165,23 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
       newdata = self$architecture$transforms$x(features, pars)
       pf_pars = self$param_set$get_values(tags = "predict_fun")
       if (inherits(self$model$model, "keras.engine.sequential.Sequential")) {
-        p = invoke(keras::predict_proba, self$model$model, x = newdata, .args = pf_pars)
+        probs = invoke(keras::predict_proba, self$model$model, x = newdata, .args = pf_pars)
       } else {
-        p = invoke(self$model$model$predict, x = newdata, .args = pf_pars)
+        probs = invoke(self$model$model$predict, x = newdata, .args = pf_pars)
       }
-      fixup_target_levels_prediction_classif(p, task, self$predict_type)
+
+      colnames(probs) = task$target_names
+      p = map(task$target_names, function(t) {
+        list(
+          row_ids = task$row_ids,
+          truth = task$truth()[[t]],
+          prob = pvec2mat(probs[, t, drop = FALSE], c("0", "1"))
+        )
+      })
+
+      names(p) = task$target_names
+      preds = map(as.PredictionDataMultioutput(p, task$task_types), as_prediction)
+      PredictionMultioutput$new(task, task$row_ids, preds)
     }
   )
 )
-
-#' Fix target levels
-#' @param prob [`numeric`]\cr
-#'   The prediction to fix levels for.
-#' @param task [`Task`]\cr
-#'   The [`Task`] to create prediction from.
-#' @param out [`character`]\cr
-#'   Output type, either "response" or "prob".
-#' @return A [`PredictionClassif`]
-fixup_target_levels_prediction_classif = function(prob, task, out = "response", threshold = 0.5) {
-  colnames(prob) = task$target_names
-
-  if (out == "response") {
-    argmx = apply(prob, 2, function(x) ifelse(x >= threshold, 1, 0))
-    response = factor(task$target_names[argmx])
-    PredictionClassif$new(task = task, prob = NULL, response = response)
-  } else if (out == "prob") {
-    # Binary response with positive class:
-    if (length(task$class_names) == 2) {
-      if (all(levels(task$data()[[task$target_names]]) != task$class_names)) {
-        prob = 1 - prob
-      }
-    }
-    PredictionMultiLabel$new(task = task, prob = prob, response = NULL)
-  }
-}

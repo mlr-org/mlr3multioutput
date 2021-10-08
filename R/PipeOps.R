@@ -1,7 +1,7 @@
-#' @title PipeOpSplitMultiout
+#' @title PipeOpSplitMultioutput
 #'
 #' @usage NULL
-#' @name mlr_pipeops_multioutsplit
+#' @name mlr_pipeops_multioutputsplit
 #' @format [`R6Class`] inheriting from [`PipeOp`].
 #'
 #' @description
@@ -18,7 +18,7 @@
 #'
 #' @section Construction:
 #' ```
-#' PipeOpSplitMultiout$new(id = "multioutsplit", param_vals = list())
+#' PipeOpSplitMultioutput$new(id = "multioutputsplit", param_vals = list())
 #' ```
 #' * `id` :: `character(1)`\cr
 #'   Identifier of the resulting object, default `"ovrsplit"`.
@@ -27,10 +27,10 @@
 #'   be set during construction. Default `list()`.
 #'
 #' @section Input and Output Channels:
-#' [`PipeOpSplitMultiout`] has one input channel named `"input"` taking a
+#' [`PipeOpSplitMultioutput`] has one input channel named `"input"` taking a
 #' [`TaskMultioutput`][TaskMultioutput] both during training and prediction.
 #'
-#' [`PipeOpSplitMultiout`] has one output channel named `"output"` returning a [`Multiplicity`] of
+#' [`PipeOpSplitMultioutput`] has one output channel named `"output"` returning a [`Multiplicity`] of
 #' [`Tasks`][mlr3::Task]s both during training and prediction.
 #'
 #' @section State:
@@ -38,14 +38,14 @@
 #' during training.
 #'
 #' @section Parameters:
-#' [`PipeOpSplitMultiout`] has no parameters.
+#' [`PipeOpSplitMultioutput`] has no parameters.
 #'
 #' @section Internals:
 #'
 #' The names of the element of the output [`Multiplicity`] are given by the levels of the target.
 #'
 
-#' Should be used in combination with [`PipeOpPredictionMultioutUnite`].
+#' Should be used in combination with [`PipeOpPredictionMultioutputUnite`].
 #'
 #' @section Fields:
 #' Only fields inherited from [`PipeOp`].
@@ -59,10 +59,10 @@
 #' @examples
 #' library(mlr3)
 #' task = tsk("linnerud")
-#' po = po("multioutsplit")
+#' po = po("multioutputsplit")
 #' po$train(list(task))
 #' po$predict(list(task))
-PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
+PipeOpSplitMultioutput = R6Class("PipeOpSplitMultioutput",
   inherit = mlr3pipelines::PipeOp,
   public = list(
     #' @description
@@ -93,10 +93,10 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
 )
 
 
-#' @title PipeOpPredictionMultioutUnite
+#' @title PipeOpPredictionMultioutputUnite
 #'
 #' @usage NULL
-#' @name mlr_pipeops_multioutunite
+#' @name mlr_pipeops_multioutputunite
 #' @format [`R6Class`] inheriting from [`PipeOpEnsemble`]/[`PipeOp`].
 #'
 #' @description
@@ -122,7 +122,7 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
 #' @section Internals:
 #' Inherits from [`PipeOpEnsemble`] by implementing the `private$.predict()` method.
 #'
-#' Should be used in combination with [`PipeOpSplitMultiOut`].
+#' Should be used in combination with [`PipeOpSplitMultiOutput`].
 #'
 #' @section Fields:
 #' Only fields inherited from [`PipeOpEnsemble`]/[`PipeOp`].
@@ -134,18 +134,18 @@ PipeOpSplitMultiout = R6Class("PipeOpSplitMultiout",
 #' @family Multiplicity PipeOps
 #' @family Experimental Features
 #' @export
-PipeOpPredictionMultioutUnite = R6Class("PipeOpPredictionMultioutUnite",
+PipeOpPredictionMultioutputUnite = R6Class("PipeOpPredictionMultioutputUnite",
   inherit = mlr3pipelines::PipeOpEnsemble,
   public = list(
     #' @description
     #' Initialize a new R6 class.
     #'
     #' @param id `character(1)`\cr
-    #'   Identifier of the resulting  object, defaults to "multioutunite".
+    #'   Identifier of the resulting  object, defaults to "multioutputunite".
     #' @param param_vals named `list`\cr
     #'   List of hyperparameter settings, overwriting the hyperparameter settings that would
     #'   otherwise be set during construction. Default `list()`.
-    initialize = function(id = "multioutunite", param_vals = list()) {
+    initialize = function(id = "multioutputunite", param_vals = list()) {
       super$initialize(0, TRUE, id, param_vals = param_vals, prediction_type = "Prediction",
         tags = "multiplicity")
     }
@@ -164,7 +164,7 @@ PipeOpPredictionMultioutUnite = R6Class("PipeOpPredictionMultioutUnite",
 #' @title PipeOpMultiLearner
 #'
 #' @usage NULL
-#' @name mlr_pipeops_multioutlrn
+#' @name mlr_pipeops_multioutputlrn
 #' @format [`R6Class`] object inheriting from [`PipeOp`].
 #'
 #' @description
@@ -228,13 +228,13 @@ PipeOpPredictionMultioutUnite = R6Class("PipeOpPredictionMultioutUnite",
 #'   classif = lrn("classif.rpart", cp = 0.1),
 #'   regr = lrn("regr.rpart")
 #' )
-#' lrn_po = mlr_pipeops$get("multioutlrn", learners)
+#' lrn_po = mlr_pipeops$get("multioutputlrn", learners)
 #'
 #' # Train the graph
-#' gr = po("multioutsplit") %>>% lrn_po
+#' gr = po("multioutputsplit") %>>% lrn_po
 #' gr$train(task)
 #' gr$predict(task)
-PipeOpMultiLearner = R6Class("PipeOpMultiLearner",
+PipeOpMultioutputLearner = R6Class("PipeOpMultioutputLearner",
   inherit = mlr3pipelines::PipeOp,
   public = list(
     #' @description

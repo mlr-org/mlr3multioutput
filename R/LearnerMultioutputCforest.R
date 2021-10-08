@@ -111,10 +111,10 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
       ps$values$saveinfo = FALSE
 
       super$initialize(
-        id = "multiout.cforest",
+        id = "multioutput.cforest",
         feature_types = mlr_reflections$task_feature_types,
         predict_types = c("response", "prob"),
-        param_set = ParamSet$new(),
+        param_set = ps,
         properties = c("missings", "twoclass", "multiclass", "multioutput", "multilabel"),
         packages = c("partykit", "sandwich", "coin")
       )
@@ -169,8 +169,8 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
         p = map(task$target_names, function(t) {
           list(
             row_ids = task$row_ids,
-            truth = task$truth[[t]],
-            prob = preds[[t]] # FIXME
+            truth = task$truth()[[t]],
+            prob = preds[, t, drop = FALSE] # FIXME
           )
         })
       }

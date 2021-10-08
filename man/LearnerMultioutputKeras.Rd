@@ -2,7 +2,7 @@
 % Please edit documentation in R/LearnerMultioutputKeras.R
 \name{LearnerMultioutputKeras}
 \alias{LearnerMultioutputKeras}
-\alias{mlr_learners_multiout.keras}
+\alias{mlr_learners_multioutput.keras}
 \title{Keras Neural Network with custom architecture (Multilabel)}
 \format{
 \code{\link[R6:R6Class]{R6::R6Class()}} inheriting from \link[mlr3:LearnerMultioutput]{mlr3::LearnerMultioutput}.
@@ -28,8 +28,8 @@ See \code{?callbacks}.
 }
 \section{Construction}{
 \preformatted{LearnerMultioutputKeras$new()
-mlr3::mlr_learners$get("multiout.keras")
-mlr3::lrn("multiout.keras")
+mlr3::mlr_learners$get("multioutput.keras")
+mlr3::lrn("multioutput.keras")
 }
 }
 
@@ -90,6 +90,7 @@ For more info on parameters, see \code{find_lr}.
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="base_learner">}\href{../../mlr3/html/Learner.html#method-base_learner}{\code{mlr3::Learner$base_learner()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="format">}\href{../../mlr3/html/Learner.html#method-format}{\code{mlr3::Learner$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="help">}\href{../../mlr3/html/Learner.html#method-help}{\code{mlr3::Learner$help()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="predict">}\href{../../mlr3/html/Learner.html#method-predict}{\code{mlr3::Learner$predict()}}\out{</span>}
@@ -106,13 +107,12 @@ For more info on parameters, see \code{find_lr}.
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LearnerMultioutputKeras$new(
-  id = "multiout.keras",
+  id = "multioutput.keras",
   predict_types = c("response", "prob"),
   feature_types = c("integer", "numeric"),
   properties = c("multilabel"),
   packages = "keras",
-  man = "mlr3keras::mlr_learners_classif.keras",
-  architecture = KerasArchitectureCustomModel$new()
+  architecture = mlr3keras::KerasArchitectureCustomModel$new()
 )}\if{html}{\out{</div>}}
 }
 

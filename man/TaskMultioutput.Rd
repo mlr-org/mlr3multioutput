@@ -34,6 +34,7 @@ See \code{initialize}.}
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="add_strata">}\href{../../mlr3/html/Task.html#method-add_strata}{\code{mlr3::Task$add_strata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="cbind">}\href{../../mlr3/html/Task.html#method-cbind}{\code{mlr3::Task$cbind()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="data">}\href{../../mlr3/html/Task.html#method-data}{\code{mlr3::Task$data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="droplevels">}\href{../../mlr3/html/Task.html#method-droplevels}{\code{mlr3::Task$droplevels()}}\out{</span>}
@@ -48,6 +49,7 @@ See \code{initialize}.}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="rename">}\href{../../mlr3/html/Task.html#method-rename}{\code{mlr3::Task$rename()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="select">}\href{../../mlr3/html/Task.html#method-select}{\code{mlr3::Task$select()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="set_col_roles">}\href{../../mlr3/html/Task.html#method-set_col_roles}{\code{mlr3::Task$set_col_roles()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="set_levels">}\href{../../mlr3/html/Task.html#method-set_levels}{\code{mlr3::Task$set_levels()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Task" data-id="set_row_roles">}\href{../../mlr3/html/Task.html#method-set_row_roles}{\code{mlr3::Task$set_row_roles()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="TaskSupervised" data-id="truth">}\href{../../mlr3/html/TaskSupervised.html#method-truth}{\code{mlr3::TaskSupervised$truth()}}\out{</span>}
 }
@@ -59,13 +61,7 @@ See \code{initialize}.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TaskMultioutput$new(
-  id,
-  backend,
-  target,
-  task_types = NULL,
-  task_type = "multioutput"
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TaskMultioutput$new(id, backend, target, extra_args = list(task_types = NULL))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -84,9 +80,6 @@ Name of the target columns.}
 \item{\code{task_types}}{\code{\link{character}}\cr
 Named character vector of per-target task-types.
 E.g. c(tgt1 = "regr", tgt2 = "classif")}
-
-\item{\code{task_type}}{(\code{character(1)})\cr
-Task type of the constructed task. Defautls to \code{"multioutput"}.}
 }
 \if{html}{\out{</div>}}
 }

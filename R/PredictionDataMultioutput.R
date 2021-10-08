@@ -1,5 +1,5 @@
 #' @export
-as_prediction.PredictionDataMultioutput = function(x, check = TRUE) { # nolint
+as_prediction.PredictionDataMultioutput = function(x, check = TRUE, ...) { # nolint
   invoke(PredictionMultioutput$new, check = check, .args = x)
 }
 
@@ -46,7 +46,7 @@ c.PredictionDataMultioutput = function(..., keep_duplicates = TRUE) {
     return(dots[[1L]])
   }
 
-  predict_types = names(mlr_reflections$learner_predict_types$multiout)
+  predict_types = names(mlr_reflections$learner_predict_types$multioutput)
   predict_types = map(dots, function(x) intersect(names(x), predict_types))
   predict_types = map(dots, "predict_types")
   if (!every(predict_types[-1L], setequal, y = predict_types[[1L]])) {

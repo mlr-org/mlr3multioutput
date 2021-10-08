@@ -89,27 +89,27 @@ p$score(m1)
 - `po("splitmultiout")`: Splits a `TaskMultioutput` into one `Task` for each target.
 
 ```{r}
-po("multioutsplit")$train(list(t))
+po("multioutputsplit")$train(list(t))
 ```
 
 - `po("multioutunite")`: Unites a `Multiplicity` of per-target `Predictions` into a `PredictionMultioutput`.
 
 ```{r}
-po("multioutunite") # See example below.
+po("multioutputunite") # See example below.
 ```
 
 - `po("multioutlrn")`: Applies one or several `Learner`s for each Task in a `Multiplicity`.
 
 ```{r}
-po("multioutlrn", learners = list(lrn("regr.rpart"), lrn("classif.rpart")))
+po("multioutputlrn", learners = list(lrn("regr.rpart"), lrn("classif.rpart")))
 ```
 
 ### Approach 1: Multiplicity (same learner for all targets)
 
 ```{r}
-gr = po("multioutsplit") %>>%
+gr = po("multioutputsplit") %>>%
  lrn("regr.rpart") %>>%
- po("multioutunite")
+ po("multioutputunite")
 gr = GraphLearner$new(gr)
 
 gr$train(t)
@@ -121,8 +121,8 @@ gr$predict(t)
 **API**:
 
 ```{r}
-gr = po("multioutsplit") %>>%
- po("multioutlrn", learners = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
+gr = po("multioutputsplit") %>>%
+ po("multioutputlrn", learners = list(regr = lrn("regr.rpart"), classif = lrn("classif.rpart")))
 
 gl = GraphLearner$new(gr)
 gl$train(t)
@@ -142,7 +142,7 @@ Current problems:
 **Internals**
 
 ```{r}
-gr = po("multioutsplit") %>>%
+gr = po("multioutputsplit") %>>%
   po("multiplicityexply", outnum = 3) %>>%
   gunion(list(
     lrn("regr.rpart", id = "rp1"),
@@ -150,7 +150,7 @@ gr = po("multioutsplit") %>>%
     lrn("regr.rpart", id = "rp3")
  )) %>>%
  po("multiplicityimply", innum = t$target_names) %>>%
- po("multioutunite")
+ po("multioutputunite")
 
 gl = GraphLearner$new(gr)
 gl$train(t)
@@ -159,8 +159,6 @@ prds
 ```
 
 ## with mlr3keras
-
-**Not implemented**
 
 ```{r, eval = FALSE}
 library(mlr3keras)
@@ -178,7 +176,7 @@ library(paradox)
 
 task = tsk("linnerud")
 
-gr = PipeOpSplitMultiout$new() %>>% lrn("regr.rpart") %>>% PipeOpPredictionMultiOutUnite$new()
+gr = PipeOpSplitMultioutput$new() %>>% lrn("regr.rpart") %>>% PipeOpPredictionMultioutputUnite$new()
 
 grl = GraphLearner$new(gr)
 

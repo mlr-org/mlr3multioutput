@@ -27,10 +27,15 @@ TaskMultioutput = R6Class("TaskMultioutput",
     #' @param task_types [`character`]\cr
     #'   Named character vector of per-target task-types.
     #'   E.g. c(tgt1 = "regr", tgt2 = "classif")
-    initialize = function(id, backend, target, task_types = NULL, task_type = "multioutput") {
-      super$initialize(id = id, task_type = task_type, backend = backend, target = target)
+    initialize = function(id, backend, target, extra_args = list(task_types = NULL)) {
+      map(target, assert_string)
+      super$initialize(
+        id = id, task_type = "multioutput", backend = backend,
+        target = target, extra_args = extra_args
+      )
+
       private$.update_class_property()
-      self$task_types = check_task_types(self, task_types) %??% infer_task_types(self)
+      self$task_types = check_task_types(self, self$extra_args$task_types) %??% infer_task_types(self)
     },
     #' @field task_types (`character()`)\cr
     #' See `initialize`.
@@ -44,7 +49,7 @@ TaskMultioutput = R6Class("TaskMultioutput",
     .update_class_property = function() {
       # Checks whether all targets are binary & classif
       mlbl = all(map_lgl(self$data(cols = self$target_names), function(x) {
-        test_factor(x, len = self$nrow, n.levels = 2L)
+        test_factor(as.factor(x), len = self$nrow, n.levels = 2L)
       }))
 
       private$.properties = setdiff(private$.properties, c("multioutput", "multilabel"))
