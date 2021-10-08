@@ -27,7 +27,7 @@ MeasureMultioutputWeightedAvg = R6Class("MeasureMultioutputWeightedAvg",
     #' @template param_measure_multioutput_weightedavg
     #'
     #' @return A [`MeasureMultioutput`]
-    initialize = function(name = "weightedavg", measures, weights = NULL) {
+    initialize = function(name = "weightedavg", measures = get_default_measures(), weights = NULL) {
       self$measures = map(assert_named(measures, type =  "unique"), assert_measure)
       self$weights = assert_numeric(weights, null.ok = TRUE)
       super$initialize(

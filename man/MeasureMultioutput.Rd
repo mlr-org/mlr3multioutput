@@ -15,6 +15,7 @@ Predefined measures can be found in the \link[mlr3misc:Dictionary]{mlr3misc::Dic
 \seealso{
 Example measures:
 msr("multioutput.custom")
+msr("multioutput.customaggr")
 }
 \section{Super class}{
 \code{\link[mlr3:Measure]{mlr3::Measure}} -> \code{MeasureMultioutput}
