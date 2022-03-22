@@ -42,27 +42,19 @@ c.PredictionDataMultioutput = function(..., keep_duplicates = TRUE) {
   dots = list(...)
   assert_list(dots, "PredictionDataMultioutput")
   assert_flag(keep_duplicates)
-  if (length(dots) == 1L || TRUE) {
+  if (length(dots) == 1L) {
     return(dots[[1L]])
   }
 
-  predict_types = names(mlr_reflections$learner_predict_types$multioutput)
-  predict_types = map(dots, function(x) intersect(names(x), predict_types))
-  predict_types = map(dots, "predict_types")
-  if (!every(predict_types[-1L], setequal, y = predict_types[[1L]])) {
-    stopf("Cannot rbind predictions: Different predict_types in objects.")
-  }
+  preds = map(dots, as_prediction)
+  target_names = names(preds[[1]]$predictions)
 
-  tab = map_dtr(dots, function(p) subset(p$data), .fill = FALSE)
-  prob = do.call(rbind, map(dots, "prob"))
+  p = map(preds, "predictions")
 
-  if (!keep_duplicates) {
-    keep = !duplicated(tab, by = "row_id", fromLast = TRUE)
-    tab = tab[keep]
-    prob = prob[keep, , drop = FALSE]
-  }
+  pc = map(target_names, function(i) do.call(c, lapply(p, `[[`, i)))
+  names(pc) = target_names
 
-  PredictionMultioutput$new(row_ids = tab$row_id, partition = tab$partition, prob = prob)
+  PredictionMultioutput$new(predictions = pc)
 }
 
 

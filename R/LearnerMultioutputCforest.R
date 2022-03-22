@@ -170,7 +170,7 @@ LearnerMultioutputCForest = R6Class("LearnerMultioutputCForest",
           list(
             row_ids = task$row_ids,
             truth = task$truth()[[t]],
-            prob = preds[, t, drop = FALSE] # FIXME
+            prob = pvec2mat(preds[, t, drop = TRUE], c("0", "1"))
           )
         })
       }

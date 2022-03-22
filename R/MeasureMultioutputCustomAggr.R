@@ -35,7 +35,7 @@ MeasureMultioutputCustomAggr = R6Class("MeasureMultioutputCustomAggr",
         range = range,
         minimize = TRUE,
         predict_type = assert_string(unique(map_chr(measures, "predict_type"))),
-        packages = assert_character(unique(map_chr(measures, "packages"))),
+        packages = assert_character(unique(unlist(map(measures, "packages")))),
         properties = unlist(map(measures, "properties")),
         man = paste0("mlr3multioutput::mlr_measures_multioutput.", name)
       )
