@@ -68,7 +68,7 @@ LearnerMultioutputKerasCNNWordError = R6::R6Class("LearnerMultioutputKerasCNNWor
         kernel_size = 3L,
         filters = 128L
       )
-      arch = KerasArchitectureCNNWordError$new(build_arch_fn = build_keras_1D_multilabel_cnn_model_word_error, param_set = ps)
+      arch = KerasArchitectureCNNWordError$new(build_arch_fn = build_keras_1D_multilabel_cnn_model_word_error_simple, param_set = ps)
       super$initialize(
         id = "multioutput.kerascnnworderror",
         feature_types = c("integer", "numeric", "factor", "ordered"),
@@ -94,7 +94,7 @@ KerasArchitectureCNNWordError = R6::R6Class("KerasArchitectureCNN",
             x = reshape_data_embedding(features, factors_jointly = TRUE)$data$continuous
           } else {
             x = as.matrix(model.matrix(~. - 1, features))
-          } 
+          }
           x1 = x[, 1:(ncol(x) / 2)]
           x2 = x[, ((ncol(x) / 2) + 1):ncol(x)]
 
@@ -149,78 +149,176 @@ build_keras_1D_multilabel_cnn_model_word_error = function(task, pars) {
 
   if (is.null(pars$char_embed_size))
     char_embed_size = min(600L, round(1.6 * n_cat^0.56))
-  
+
   embedding = layer_embedding(
-  name = "embed_words",
-  input_length = char_input_length,
-  input_dim = as.numeric(n_cat),
-  output_dim = as.numeric(char_embed_size),
-  embeddings_initializer = initializer_he_uniform()
-)
-
-dropout1 = layer_dropout(rate = pars$char_embed_dropout, input_shape = as.numeric(char_embed_size))
-
-for (i in seq_len(n_layers)) {
-  assign(
-    x = paste0("conv", i),
-    value = layer_conv_1d(
-      filters = filters[i],
-      kernel_size = kernel_size[i],
-      padding = "valid",
-      activation = "relu",
-      strides = 1,
-      kernel_initializer = "he_uniform"
-    )
+    name = "embed_words",
+    input_length = char_input_length,
+    input_dim = as.numeric(n_cat),
+    output_dim = as.numeric(char_embed_size),
+    embeddings_initializer = initializer_he_uniform()
   )
+
+ dropout1 = layer_dropout(rate = pars$char_embed_dropout, input_shape = as.numeric(char_embed_size))
+
+  for (i in seq_len(n_layers)) {
+    assign(
+      x = paste0("conv", i),
+      value = layer_conv_1d(
+        filters = filters[i],
+        kernel_size = kernel_size[i],
+        padding = "valid",
+        activation = "relu",
+        strides = 1,
+        kernel_initializer = "he_uniform"
+      )
+    )
+  }
+  maxpool1 = layer_max_pooling_1d()
+  maxpool2 = layer_max_pooling_1d()
+  globalmaxpool = layer_global_max_pooling_1d()
+
+  word_input = layer_input(shape = char_input_length, name = "word_input")
+  error_input = layer_input(shape = char_input_length, name = "error_input")
+
+  word_layers = word_input %>%
+    embedding %>%
+    dropout1 %>%
+    conv1 %>%
+    maxpool1 %>%
+    conv2 %>%
+    maxpool2 %>%
+    conv3 %>%
+    globalmaxpool
+
+  error_layers = error_input %>%
+    embedding %>%
+    dropout1 %>%
+    conv1 %>%
+    maxpool1 %>%
+    conv2 %>%
+    maxpool2 %>%
+    conv3 %>%
+    globalmaxpool
+
+
+  output = layer_concatenate(c(word_layers, error_layers))
+
+  output = output %>%
+    layer_dense(pars$hidden_dims, kernel_initializer = "he_uniform") %>%
+    layer_dropout(pars$dropout) %>%
+    layer_dense(units = pars$hidden_dims, activation = 'relu') %>%
+    layer_dense(length(task$target_names), activation = "sigmoid", name = "output")
+
+
+  model = keras_model(
+    inputs = c(word_input, error_input),
+    outputs = output
+  )
+
+  # Compile model
+  model %>% compile(
+    optimizer = pars$optimizer,
+    loss = pars$loss, #binary_crossentropy for multilabel, categorical_crossentropy for multiclass
+    metrics = pars$metrics
+  )
+
+  return(model)
 }
-maxpool1 = layer_max_pooling_1d()
-maxpool2 = layer_max_pooling_1d()
-globalmaxpool = layer_global_max_pooling_1d()
-
-word_input = layer_input(shape = char_input_length, name = "word_input")
-error_input = layer_input(shape = char_input_length, name = "error_input")
-
-word_layers = word_input %>%
-  embedding %>%
-  dropout1 %>%
-  conv1 %>%
-  maxpool1 %>%
-  conv2 %>%
-  maxpool2 %>%
-  conv3 %>%
-  globalmaxpool
-
-error_layers = error_input %>%
-  embedding %>%
-  dropout1 %>%
-  conv1 %>%
-  maxpool1 %>%
-  conv2 %>%
-  maxpool2 %>%
-  conv3 %>%
-  globalmaxpool
 
 
-output = layer_concatenate(c(word_layers, error_layers))
+build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
+  require(keras)
+  require(magrittr)
+  if (pars$use_embedding) {
+    embd = mlr3keras::make_embedding(task, pars$factor_embed_size, pars$factor_embed_dropout, pars$factors_jointly)
+    factor_layers = embd$layers
+  } else {
+    factor_layers = NULL
+  }
 
-output = output %>%
-  layer_dense(pars$hidden_dims, kernel_initializer = "he_uniform") %>%
-  layer_dropout(pars$dropout) %>%
-  layer_dense(units = pars$hidden_dims, activation = 'relu') %>% 
-  layer_dense(length(task$target_names), activation = "sigmoid", name = "output")
+  char_cols = grepl(pars$char_colnames[1], task$feature_names) | grepl(pars$char_colnames[2], task$feature_names)
+  inputs = task$data(cols = task$feature_names[char_cols])
+  n_cat = sum(map_dbl(inputs, function(x){
+    if (is.factor(x)) length(levels(x)) else length(unique(x))
+  }))
 
 
-model = keras_model(
-  inputs = c(word_input, error_input),
-  outputs = output
-)
+  char_input_length = ncol(inputs)
+  max_layers = 0
+  input_length_rem = char_input_length
+  while (input_length_rem > 0) {
+    input_length_rem = (input_length_rem - pars$kernel_size) / 2
+    max_layers = max_layers + 1
+  }
 
-# Compile model
-model %>% compile(
-  optimizer = pars$optimizer,
-  loss = pars$loss, #binary_crossentropy for multilabel, categorical_crossentropy for multiclass
-  metrics = pars$metrics
-)
+  if (pars$kernel_size != 1L) {
+    max_layers = max_layers - 1
+  }
 
-return(model)
+  # get n_layers
+  n_layers = min(pars$n_conv_layers, max_layers)
+  # set kernel_size and filters
+  kernel_size = rep(pars$kernel_size, n_layers)
+  filters = rep(pars$filters, n_layers)
+
+  if (is.null(pars$char_embed_size))
+    char_embed_size = min(600L, round(1.6 * n_cat^0.56))
+
+  embedding = layer_embedding(
+    name = "embed_words",
+    input_length = char_input_length,
+    input_dim = as.numeric(n_cat),
+    output_dim = as.numeric(char_embed_size),
+    embeddings_initializer = initializer_he_uniform()
+  )
+
+ dropout1 = layer_dropout(rate = pars$char_embed_dropout, input_shape = as.numeric(char_embed_size))
+
+  for (i in seq_len(n_layers)) {
+    assign(
+      x = paste0("conv", i),
+      value = layer_conv_1d(
+        filters = filters[i],
+        kernel_size = kernel_size[i],
+        padding = "valid",
+        activation = "relu",
+        strides = 1,
+        kernel_initializer = "he_uniform"
+      )
+    )
+  }
+  maxpool1 = layer_max_pooling_1d()
+  maxpool2 = layer_max_pooling_1d()
+  globalmaxpool = layer_global_max_pooling_1d()
+
+  text_input = layer_input(shape = char_input_length, name = "text_input")
+
+  layers = text_input %>%
+    embedding %>%
+    dropout1 %>%
+    conv1 %>%
+    maxpool1 %>%
+    conv2 %>%
+    maxpool2 %>%
+    conv3 %>%
+    globalmaxpool %>%
+    layer_dense(pars$hidden_dims, kernel_initializer = "he_uniform") %>%
+    layer_dropout(pars$dropout) %>%
+    layer_dense(units = pars$hidden_dims, activation = 'relu') %>%
+    layer_dense(length(task$target_names), activation = "sigmoid", name = "output")
+
+
+  model = keras_model(
+    inputs = text_input,
+    outputs = output
+  )
+
+  # Compile model
+  model %>% compile(
+    optimizer = pars$optimizer,
+    loss = pars$loss, #binary_crossentropy for multilabel, categorical_crossentropy for multiclass
+    metrics = pars$metrics
+  )
+
+  return(model)
 }
