@@ -310,7 +310,7 @@ build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
 
   model = keras_model(
     inputs = text_input,
-    outputs = output
+    outputs = layers
   )
 
   # Compile model
