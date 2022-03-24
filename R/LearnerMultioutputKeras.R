@@ -92,11 +92,14 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
       )
     },
 
+    finalize = function() {
+      keras::k_clear_session()
+    },
 
     save = function(filepath) {
       assert_path_for_output(filepath)
       if (is.null(self$model)) stop("Model must be trained before saving")
-      keras::save_model_hdf5(self$model$model, filepath)
+      keras::save_model_hdf5(self$model$model, filepath, include_optimizer = TRUE)
     },
     load_model_from_file = function(filepath) {
       assert_file_exists(filepath)
@@ -181,7 +184,15 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
 
       names(p) = task$target_names
       preds = map(as.PredictionDataMultioutput(p, task$task_types), as_prediction)
-      PredictionMultioutput$new(task, task$row_ids, preds)
-    }
+      return(PredictionMultioutput$new(task, task$row_ids, preds))
+      # private$.clear_session()
+    }#,
+
+    # .clear_session = function() {
+    #   tmp = tempfile(pattern = "model", tmpdir = tempdir(), fileext = ".hdf5")
+    #   self$save(tmp)
+    #   keras::k_clear_session()
+    #   self$load_model_from_file(tmp)
+    # }
   )
 )
