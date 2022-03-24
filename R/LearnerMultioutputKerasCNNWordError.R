@@ -21,7 +21,7 @@ LearnerMultioutputKerasCNNWordError = R6::R6Class("LearnerMultioutputKerasCNNWor
     initialize = function() {
       ps = ParamSet$new(list(
         ParamInt$new("hidden_dims", lower = 1, upper = Inf, default = 128, tags = "train"),
-        # ParamDbl$new("regularization", lower = 0, upper = 1, default = 0.01, tags = "train"),
+        ParamDbl$new("regularization", lower = 0, upper = 1, default = 0.01, tags = "train"),
         ParamUty$new("regularizer", default = "regularizer_l1_l2()", tags = "train"),
         ParamUty$new("char_colnames", tags = "train"),
         ParamLgl$new("use_dropout", default = TRUE, tags = "train"),
@@ -51,15 +51,16 @@ LearnerMultioutputKerasCNNWordError = R6::R6Class("LearnerMultioutputKerasCNNWor
       ))
       ps$values = list(
         use_embedding = FALSE, factors_jointly = TRUE, factor_embed_dropout = 0, factor_embed_size = NULL,
-        char_embed_dropout = 0, char_embed_size = NULL,
+        char_embed_dropout = 0.1, char_embed_size = NULL,
         activation = "relu",
         char_colnames = c("word", "input"),
         # layer_units = c(32, 32, 32),
         initializer = initializer_he_uniform(),
         optimizer = optimizer_adam(lr = 3*10^-4),
         regularizer = regularizer_l1_l2(),
+        regularization = 0.01,
         use_batchnorm = FALSE,
-        use_dropout = FALSE, dropout = 0, input_dropout = 0,
+        use_dropout = TRUE, dropout = 0.1, input_dropout = 0,
         loss = "binary_crossentropy",
         metrics = "categorical_accuracy",
         output_activation = "sigmoid",
@@ -68,7 +69,7 @@ LearnerMultioutputKerasCNNWordError = R6::R6Class("LearnerMultioutputKerasCNNWor
         kernel_size = 3L,
         filters = 128L
       )
-      arch = KerasArchitectureCNNWordError$new(build_arch_fn = build_keras_1D_multilabel_cnn_model_word_error_simple, param_set = ps)
+      arch = KerasArchitectureCNNWordErrorSimple$new(build_arch_fn = build_keras_1D_multilabel_cnn_model_word_error_simple, param_set = ps)
       super$initialize(
         id = "multioutput.kerascnnworderror",
         feature_types = c("integer", "numeric", "factor", "ordered"),
@@ -99,6 +100,28 @@ KerasArchitectureCNNWordError = R6::R6Class("KerasArchitectureCNN",
           x2 = x[, ((ncol(x) / 2) + 1):ncol(x)]
 
           return(list(word_input = x1, error_input = x2))
+      })
+    }
+  )
+)
+
+
+#' @title Special Keras Neural Network CNN architecture for writing error detection
+#' @rdname KerasArchitecture
+#' @family KerasArchitectures
+#' @export
+KerasArchitectureCNNWordErrorSimple = R6::R6Class("KerasArchitectureCNN",
+  inherit = mlr3keras::KerasArchitecture,
+  public = list(
+    initialize = function(build_arch_fn, param_set) {
+      super$initialize(build_arch_fn = build_arch_fn, param_set = param_set,
+        x_transform = function(features, pars) {
+          if (pars$use_embedding) {
+            x = reshape_data_embedding(features, factors_jointly = TRUE)$data$continuous
+          } else {
+            x = as.matrix(model.matrix(~. - 1, features))
+          }
+          return(x)
       })
     }
   )
@@ -244,6 +267,7 @@ build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
 
 
   char_input_length = ncol(inputs)
+
   max_layers = 0
   input_length_rem = char_input_length
   while (input_length_rem > 0) {
@@ -269,7 +293,8 @@ build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
     input_length = char_input_length,
     input_dim = as.numeric(n_cat),
     output_dim = as.numeric(char_embed_size),
-    embeddings_initializer = initializer_he_uniform()
+    embeddings_initializer = initializer_he_uniform(),
+    embeddings_regularizer = regularizer_l2(l = pars$regularization)
   )
 
  dropout1 = layer_dropout(rate = pars$char_embed_dropout, input_shape = as.numeric(char_embed_size))
@@ -291,9 +316,7 @@ build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
   maxpool2 = layer_max_pooling_1d()
   globalmaxpool = layer_global_max_pooling_1d()
 
-  text_input = layer_input(shape = char_input_length, name = "text_input")
-
-  layers = text_input %>%
+  model = keras_model_sequential() %>%
     embedding %>%
     dropout1 %>%
     conv1 %>%
@@ -306,12 +329,6 @@ build_keras_1D_multilabel_cnn_model_word_error_simple = function(task, pars) {
     layer_dropout(pars$dropout) %>%
     layer_dense(units = pars$hidden_dims, activation = 'relu') %>%
     layer_dense(length(task$target_names), activation = "sigmoid", name = "output")
-
-
-  model = keras_model(
-    inputs = text_input,
-    outputs = layers
-  )
 
   # Compile model
   model %>% compile(
