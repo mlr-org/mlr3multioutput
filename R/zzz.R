@@ -44,6 +44,7 @@ register_mlr3 = function() { # nolint
   x$add("multioutput.kerasff", LearnerMultioutputKerasFF)
   x$add("multioutput.kerascnn", LearnerMultioutputKerasCNN)
   x$add("multioutput.kerascnnworderror", LearnerMultioutputKerasCNNWordError)
+  x$add("multioutput.kerascnnworderrorsimple", LearnerMultioutputKerasCNNWordErrorSimple)
 
   x = utils::getFromNamespace("mlr_measures", ns = "mlr3")
   defs = map(mlr_reflections$default_measures[which(!(names(mlr_reflections$default_measures) == "multioutput"))], msr)
