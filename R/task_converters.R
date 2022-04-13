@@ -4,10 +4,10 @@
 #' according to "task$task_types".
 #' @param task [`TaskMultioutput`]\cr
 #'   Multi-output task to split into tasks of type `task$task_types`.
-convert_to_basic_tasks = function(task) {
+convert_to_basic_tasks = function(task, drop_levels = TRUE) {
   assert_task(task, "multioutput")
   tasks = imap(task$task_types, function(type, tn) {
-    tn = convert_task(task$clone(), target = tn, new_type = type, drop_original_target = TRUE)
+    tn = convert_task(task$clone(), target = tn, new_type = type, drop_original_target = TRUE, drop_levels = drop_levels)
   })
 }
 

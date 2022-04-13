@@ -87,7 +87,7 @@ PipeOpSplitMultioutput = R6Class("PipeOpSplitMultioutput",
       list(as.Multiplicity(convert_to_basic_tasks(inputs[[1]])))
     },
     .predict = function(inputs) {
-      list(as.Multiplicity(convert_to_basic_tasks(inputs[[1]])))
+      list(as.Multiplicity(convert_to_basic_tasks(inputs[[1]], drop_levels = FALSE)))
     }
   )
 )
