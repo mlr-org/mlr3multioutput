@@ -176,13 +176,15 @@ KerasArchitectureCNNWordError = R6::R6Class("KerasArchitectureCNN",
     initialize = function(build_arch_fn, param_set) {
       super$initialize(build_arch_fn = build_arch_fn, param_set = param_set,
         x_transform = function(features, pars) {
+          word = grepl(pars$char_colnames[1], colnames(features))
+          error = grepl(pars$char_colnames[2], colnames(features))
           if (pars$use_embedding) {
             x = reshape_data_embedding(features, factors_jointly = TRUE)$data$continuous
           } else {
             x = as.matrix(model.matrix(~. - 1, features))
           }
-          x1 = x[, 1:(ncol(x) / 2)]
-          x2 = x[, ((ncol(x) / 2) + 1):ncol(x)]
+          x1 = x[, word]
+          x2 = x[, error]
 
           return(list(word_input = x1, error_input = x2))
       })
