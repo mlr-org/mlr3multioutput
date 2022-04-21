@@ -23,7 +23,7 @@ LearnerMultioutputKerasCNNWordError = R6::R6Class("LearnerMultioutputKerasCNNWor
         ParamInt$new("hidden_dims", lower = 1, upper = Inf, default = 128, tags = "train"),
         ParamDbl$new("regularization", lower = 0, upper = 1, default = 0.01, tags = "train"),
         ParamUty$new("regularizer", default = "regularizer_l1_l2()", tags = "train"),
-        ParamUty$new("char_colnames", tags = "train"),
+        ParamUty$new("char_colnames", tags = c("train", "predict")),
         ParamLgl$new("use_dropout", default = TRUE, tags = "train"),
         ParamDbl$new("factor_embed_dropout", lower = 0, upper = 1, default = 0.2, tags = "train"),
         ParamDbl$new("char_embed_dropout", lower = 0, upper = 1, default = 0.2, tags = "train"),
@@ -108,7 +108,7 @@ LearnerMultioutputKerasCNNWordErrorSimple = R6::R6Class("LearnerMultioutputKeras
         ParamInt$new("hidden_dims", lower = 1, upper = Inf, default = 128, tags = "train"),
         ParamDbl$new("regularization", lower = 0, upper = 1, default = 0.01, tags = "train"),
         ParamUty$new("regularizer", default = "regularizer_l1_l2()", tags = "train"),
-        ParamUty$new("char_colnames", tags = "train"),
+        ParamUty$new("char_colnames", tags = c("train", "predict")),
         ParamLgl$new("use_dropout", default = TRUE, tags = "train"),
         ParamDbl$new("factor_embed_dropout", lower = 0, upper = 1, default = 0.2, tags = "train"),
         ParamDbl$new("char_embed_dropout", lower = 0, upper = 1, default = 0.2, tags = "train"),
@@ -234,6 +234,7 @@ build_keras_1D_multilabel_cnn_model_word_error = function(task, pars) {
 
   char_cols = grepl(pars$char_colnames[1], task$feature_names) | grepl(pars$char_colnames[2], task$feature_names)
   inputs = task$data(cols = task$feature_names[char_cols])
+  browser()
   n_cat = sum(map_dbl(inputs, function(x){
     if (is.factor(x)) length(levels(x)) else length(unique(x))
   }))

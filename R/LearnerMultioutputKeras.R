@@ -116,6 +116,7 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
   ),
 
   private = list(
+    .session = NULL,
     .train = function(task) {
       pars = self$param_set$get_values(tags = "train")
       # Construct / Get the model depending on task and hyperparams.
@@ -158,12 +159,13 @@ LearnerMultioutputKeras = R6::R6Class("LearnerMultioutputKeras", inherit = Learn
           verbose = pars$verbose,
           callbacks = pars$callbacks)
       }
+      private$.session = keras::k_get_session()
       return(list(model = model, history = history, class_names = task$target_names))
     },
 
     .predict = function(task) {
+      keras::set_session(private$.session)
       pars = self$param_set$get_values(tags = "predict")
-
       features = task$data(cols = task$feature_names)
       newdata = self$architecture$transforms$x(features, pars)
       pf_pars = self$param_set$get_values(tags = "predict_fun")
